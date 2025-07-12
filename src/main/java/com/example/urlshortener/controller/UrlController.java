@@ -1,7 +1,7 @@
 package com.example.urlshortener.controller;
 
 import com.example.urlshortener.model.ShortenRequest;
-import com.example.urlshortener.model.UrlsResponse; // Import the new DTO
+import com.example.urlshortener.model.UrlsResponse;
 import com.example.urlshortener.service.UrlService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.Collections;
 import java.util.Map;
-
+import java.util.Optional;
 @RestController
 @CrossOrigin(origins = "*") // Allow any frontend to connect
 public class UrlController {
@@ -51,13 +51,20 @@ public class UrlController {
     @GetMapping("/{code}")
     public ResponseEntity<Void> redirectToOriginalUrl(@PathVariable String code) {
         System.out.println("Received request to redirect for code: " + code);
-        return urlService.getOriginalUrl(code)
-                .map(url -> {
-                    HttpHeaders headers = new HttpHeaders();
-                    headers.setLocation(URI.create(url));
-                    System.out.println("Redirecting " + code + " to " + url);
-                    return new ResponseEntity<Void>(headers, HttpStatus.FOUND);
-                })
-                .orElse(ResponseEntity.notFound().build());
+
+        // Get the Optional result from the service
+        Optional<String> originalUrlOptional = urlService.getOriginalUrl(code);
+
+        // Check if a URL is present in the Optional
+        if (originalUrlOptional.isPresent()) {
+            String url = originalUrlOptional.get();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setLocation(URI.create(url));
+            System.out.println("Redirecting " + code + " to " + url);
+            return new ResponseEntity<>(headers, HttpStatus.FOUND);
+        } else {
+            // If the Optional is empty, return a 404 Not Found response
+            return ResponseEntity.notFound().build();
+        }
     }
 }
