@@ -1,4 +1,4 @@
-package com.example.urlshortener.controller.codecovertests;
+package com.example.urlshortener.codecovertests;
 import com.example.urlshortener.controller.UrlController;
 import com.example.urlshortener.model.ShortenRequest;
 import com.example.urlshortener.model.UrlsResponse;
