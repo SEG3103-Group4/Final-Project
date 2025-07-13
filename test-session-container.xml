@@ -1,10 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><TestSessionContainer xmlns="http://www.codecover.org/xml/testsession-container" Date="1752368128707" TestSessionContainerId="79dd2941-3adb-4d33-b746-35ee6f9d0da2" version="1.0">
+<?xml version="1.0" encoding="UTF-8"?><TestSessionContainer xmlns="http://www.codecover.org/xml/testsession-container" Date="1752370525759" TestSessionContainerId="19466ebd-6dec-4703-8e9f-67f2dcbb430c" version="1.0">
     <SrcFileList>
         <SrcFile Content="package com.example.urlshortener.controller;&#10;&#10;import com.example.urlshortener.model.ShortenRequest;&#10;import com.example.urlshortener.model.UrlsResponse;&#10;import com.example.urlshortener.service.UrlService;&#10;import jakarta.validation.Valid;&#10;import org.springframework.http.HttpHeaders;&#10;import org.springframework.http.HttpStatus;&#10;import org.springframework.http.ResponseEntity;&#10;import org.springframework.web.bind.annotation.*;&#10;&#10;import java.net.URI;&#10;import java.util.Collections;&#10;import java.util.Map;&#10;import java.util.Optional;&#10;&#10;@RestController&#10;@CrossOrigin(origins = &quot;*&quot;) // Allow any frontend to connect&#10;public class UrlController {&#10;&#10;    private final UrlService urlService;&#10;&#10;    public UrlController(UrlService urlService) {&#10;        this.urlService = urlService;&#10;    }&#10;&#10;    @PostMapping(&quot;/api/shorten&quot;)&#10;    public ResponseEntity&lt;Map&lt;String, String&gt;&gt; shortenUrl(@Valid @RequestBody ShortenRequest request) {&#10;        System.out.println(&quot;Received request to shorten URL: &quot; + request.getUrl());&#10;        try {&#10;            String shortCode = urlService.shortenUrl(request.getUrl());&#10;            System.out.println(&quot;Successfully shortened &quot; + request.getUrl() + &quot; to &quot; + shortCode);&#10;            return new ResponseEntity&lt;Map&lt;String, String&gt;&gt;(Collections.singletonMap(&quot;shortCode&quot;, shortCode), HttpStatus.OK);&#10;        } catch (IllegalArgumentException e) {&#10;            System.err.println(&quot;Error shortening URL &quot; + request.getUrl() + &quot;: &quot; + e.getMessage());&#10;            return new ResponseEntity&lt;Map&lt;String, String&gt;&gt;(Collections.singletonMap(&quot;error&quot;, e.getMessage()), HttpStatus.BAD_REQUEST);&#10;        }&#10;    }&#10;&#10;    /**&#10;     * Updated endpoint to return both the map of all URLs and the total count.&#10;     * The frontend will handle displaying only the most recent 100.&#10;     */&#10;    @GetMapping(&quot;/api/urls&quot;)&#10;    public ResponseEntity&lt;UrlsResponse&gt; getAllUrls() {&#10;        Map&lt;String, String&gt; allUrls = urlService.getAllUrls();&#10;        int totalCount = allUrls.size();&#10;        UrlsResponse response = new UrlsResponse(allUrls, totalCount);&#10;        return new ResponseEntity&lt;UrlsResponse&gt;(response, HttpStatus.OK);&#10;    }&#10;&#10;    @GetMapping(&quot;/{code}&quot;)&#10;    public ResponseEntity&lt;Void&gt; redirectToOriginalUrl(@PathVariable String code) {&#10;        System.out.println(&quot;Received request to redirect for code: &quot; + code);&#10;&#10;        Optional&lt;String&gt; originalUrlOptional = urlService.getOriginalUrl(code);&#10;&#10;        if (originalUrlOptional.isPresent()) {&#10;            String url = originalUrlOptional.get();&#10;            HttpHeaders headers = new HttpHeaders();&#10;            headers.setLocation(URI.create(url));&#10;            System.out.println(&quot;Redirecting &quot; + code + &quot; to &quot; + url);&#10;            return new ResponseEntity&lt;Void&gt;(headers, HttpStatus.FOUND);&#10;        } else {&#10;            return new ResponseEntity&lt;Void&gt;(HttpStatus.NOT_FOUND);&#10;        }&#10;    }&#10;}&#10;" Filename="UrlController.java" Intrnl_Id="1"/>
-        <SrcFile Content="package com.example.urlshortener.model;&#10;&#10;import java.util.Map;&#10;import java.util.HashMap;&#10;&#10;/**&#10; * A DTO (Data Transfer Object) for sending the list of URLs and the total count&#10; * to the frontend in a single response.&#10; */&#10;public class UrlsResponse {&#10;&#10;    private Map&lt;String, String&gt; urls;&#10;    private int totalCount;&#10;&#10;    public UrlsResponse() {&#10;        this.urls = new HashMap&lt;String, String&gt;();&#10;        this.totalCount = 0;&#10;    }&#10;&#10;    // Full-arg constructor&#10;    public UrlsResponse(Map&lt;String, String&gt; urls, int totalCount) {&#10;        this.urls = urls;&#10;        this.totalCount = totalCount;&#10;    }&#10;&#10;    // Getters and Setters&#10;    public Map&lt;String, String&gt; getUrls() {&#10;        return this.urls;&#10;    }&#10;&#10;    public void setUrls(Map&lt;String, String&gt; urls) {&#10;        this.urls = urls;&#10;    }&#10;&#10;    public int getTotalCount() {&#10;        return this.totalCount;&#10;    }&#10;&#10;    public void setTotalCount(int totalCount) {&#10;        this.totalCount = totalCount;&#10;    }&#10;}&#10;" Filename="UrlsResponse.java" Intrnl_Id="2"/>
-        <SrcFile Content="package com.example.urlshortener.model;&#10;&#10;import jakarta.validation.constraints.NotEmpty;&#10;&#10;/**&#10; * A DTO representing the incoming request to shorten a URL.&#10; */&#10;public class ShortenRequest {&#10;&#10;    @NotEmpty&#10;    private String url;&#10;&#10;    // No-argument constructor&#10;    public ShortenRequest() {&#10;        this.url = &quot;&quot;;&#10;    }&#10;&#10;    // All-argument constructor&#10;    public ShortenRequest(String url) {&#10;        this.url = url;&#10;    }&#10;&#10;    public String getUrl() {&#10;        return this.url;&#10;    }&#10;&#10;    public void setUrl(String url) {&#10;        this.url = url;&#10;    }&#10;}&#10;" Filename="ShortenRequest.java" Intrnl_Id="3"/>
-        <SrcFile Content="package com.example.urlshortener;&#10;&#10;import org.springframework.boot.SpringApplication;&#10;import org.springframework.boot.autoconfigure.SpringBootApplication;&#10;&#10;@SpringBootApplication&#10;public class UrlshortenerApplication {&#10;    public static void main(String[] args) {&#10;        SpringApplication.run(UrlshortenerApplication.class, args);&#10;    }&#10;}" Filename="UrlshortenerApplication.java" Intrnl_Id="4"/>
-        <SrcFile Content="package com.example.urlshortener.service;&#10;&#10;import jakarta.annotation.PostConstruct;&#10;import org.apache.commons.lang3.RandomStringUtils;&#10;import org.apache.commons.validator.routines.UrlValidator;&#10;import org.springframework.beans.factory.annotation.Value;&#10;import org.springframework.stereotype.Service;&#10;&#10;import java.util.Map;&#10;import java.util.Optional;&#10;import java.util.concurrent.ConcurrentHashMap;&#10;import java.util.concurrent.Semaphore;&#10;import java.util.concurrent.TimeUnit;&#10;&#10;@Service&#10;public class UrlService {&#10;&#10;    private final Map&lt;String, String&gt; shortToLongUrl = new ConcurrentHashMap&lt;String, String&gt;();&#10;    private final Map&lt;String, String&gt; longToShortUrl = new ConcurrentHashMap&lt;String, String&gt;();&#10;    private final UrlValidator urlValidator = new UrlValidator(new String[]{&quot;http&quot;, &quot;https&quot;});&#10;&#10;    @Value(&quot;${rate-limiting.enabled:false}&quot;)&#10;    private boolean rateLimitingEnabled;&#10;&#10;    @Value(&quot;${rate-limiting.permits:10}&quot;)&#10;    private int maxPermits;&#10;&#10;    private Semaphore semaphore;&#10;&#10;    @PostConstruct&#10;    public void init() {&#10;        if (rateLimitingEnabled) {&#10;            this.semaphore = new Semaphore(maxPermits, true);&#10;            System.out.println(&quot;✅ Rate limiting ENABLED with &quot; + maxPermits + &quot; permits.&quot;);&#10;        } else {&#10;            System.out.println(&quot;❌ Rate limiting DISABLED.&quot;);&#10;        }&#10;    }&#10;&#10;    public String shortenUrl(String longUrl) {&#10;        if (!urlValidator.isValid(longUrl)) {&#10;            throw new IllegalArgumentException(&quot;Invalid URL provided: &quot; + longUrl);&#10;        }&#10;&#10;        applyRateLimiting();&#10;&#10;        if (longToShortUrl.containsKey(longUrl)) {&#10;            return longToShortUrl.get(longUrl);&#10;        }&#10;&#10;        String shortCode = generateUniqueShortCode();&#10;        shortToLongUrl.put(shortCode, longUrl);&#10;        longToShortUrl.put(longUrl, shortCode);&#10;        return shortCode;&#10;    }&#10;&#10;    private void applyRateLimiting() {&#10;        if (!rateLimitingEnabled) {&#10;            return;&#10;        }&#10;&#10;        boolean permitAcquired = false;&#10;        try {&#10;            System.out.println(&quot;Applying rate limit delay...&quot;);&#10;            permitAcquired = semaphore.tryAcquire(500, TimeUnit.MILLISECONDS);&#10;            if (!permitAcquired) {&#10;                System.err.println(&quot;COULD NOT ACQUIRE SEMAPHORE PERMIT - SERVER TOO BUSY&quot;);&#10;                throw new RuntimeException(&quot;Server is too busy to handle the request.&quot;);&#10;            }&#10;&#10;            Thread.sleep(150);&#10;        } catch (InterruptedException e) {&#10;            Thread.currentThread().interrupt();&#10;            throw new RuntimeException(&quot;Request was interrupted.&quot;, e);&#10;        } finally {&#10;            if (permitAcquired) {&#10;                semaphore.release();&#10;            }&#10;        }&#10;    }&#10;&#10;    public Optional&lt;String&gt; getOriginalUrl(String shortCode) {&#10;        return Optional.&lt;String&gt;ofNullable(shortToLongUrl.get(shortCode));&#10;    }&#10;&#10;    public Map&lt;String, String&gt; getAllUrls() {&#10;        return shortToLongUrl;&#10;    }&#10;&#10;    private String generateUniqueShortCode() {&#10;        String shortCode;&#10;        do {&#10;            shortCode = RandomStringUtils.randomAlphanumeric(7);&#10;        } while (shortToLongUrl.containsKey(shortCode));&#10;        return shortCode;&#10;    }&#10;}&#10;" Filename="UrlService.java" Intrnl_Id="5"/>
+        <SrcFile Content="package com.example.urlshortener.controller.codecovertests;&#10;import com.example.urlshortener.controller.UrlController;&#10;import com.example.urlshortener.model.ShortenRequest;&#10;import com.example.urlshortener.model.UrlsResponse;&#10;import com.example.urlshortener.service.UrlService;&#10;import jakarta.validation.Valid;&#10;import org.springframework.http.HttpHeaders;&#10;import org.springframework.http.HttpStatus;&#10;import org.springframework.http.ResponseEntity;&#10;import org.springframework.web.bind.annotation.*;&#10;&#10;import java.net.URI;&#10;import java.util.Collections;&#10;import java.util.Map;&#10;import java.util.Optional;&#10;&#10;public class urlControllerTester {&#10;    public static void main(String[] args) {&#10;        UrlService urlService = new UrlService();&#10;&#10;        UrlController controller = new UrlController(urlService);&#10;&#10;        ShortenRequest request = new ShortenRequest();&#10;        request.setUrl(&quot;https://en.wikipedia.org/wiki/Code_coverage&quot;);&#10;        ResponseEntity&lt;Map&lt;String, String&gt;&gt; response = controller.shortenUrl(request);&#10;        System.out.println(&quot;shortenUrl response: &quot; + response.getBody());&#10;&#10;        // getting the shortcode&#10;        String shortCode = response.getBody().get(&quot;shortCode&quot;);&#10;        System.out.println(&quot;Generated shortCode: &quot; + shortCode);&#10;&#10;        // test getAllUrls&#10;        ResponseEntity&lt;UrlsResponse&gt; allUrlsResponse = controller.getAllUrls();&#10;        System.out.println(&quot;getAllUrls response: &quot; + allUrlsResponse.getBody());&#10;&#10;        // test redirectToOriginalUrl&#10;        ResponseEntity&lt;Void&gt; redirectResponse = controller.redirectToOriginalUrl(shortCode);&#10;        System.out.println(&quot;redirectToOriginalUrl status: &quot; + redirectResponse.getStatusCode());&#10;    }&#10;}" Filename="urlControllerTester.java" Intrnl_Id="2"/>
+        <SrcFile Content="package com.example.urlshortener.model;&#10;&#10;import java.util.Map;&#10;import java.util.HashMap;&#10;&#10;/**&#10; * A DTO (Data Transfer Object) for sending the list of URLs and the total count&#10; * to the frontend in a single response.&#10; */&#10;public class UrlsResponse {&#10;&#10;    private Map&lt;String, String&gt; urls;&#10;    private int totalCount;&#10;&#10;    public UrlsResponse() {&#10;        this.urls = new HashMap&lt;String, String&gt;();&#10;        this.totalCount = 0;&#10;    }&#10;&#10;    // Full-arg constructor&#10;    public UrlsResponse(Map&lt;String, String&gt; urls, int totalCount) {&#10;        this.urls = urls;&#10;        this.totalCount = totalCount;&#10;    }&#10;&#10;    // Getters and Setters&#10;    public Map&lt;String, String&gt; getUrls() {&#10;        return this.urls;&#10;    }&#10;&#10;    public void setUrls(Map&lt;String, String&gt; urls) {&#10;        this.urls = urls;&#10;    }&#10;&#10;    public int getTotalCount() {&#10;        return this.totalCount;&#10;    }&#10;&#10;    public void setTotalCount(int totalCount) {&#10;        this.totalCount = totalCount;&#10;    }&#10;}&#10;" Filename="UrlsResponse.java" Intrnl_Id="3"/>
+        <SrcFile Content="package com.example.urlshortener.model;&#10;&#10;import jakarta.validation.constraints.NotEmpty;&#10;&#10;/**&#10; * A DTO representing the incoming request to shorten a URL.&#10; */&#10;public class ShortenRequest {&#10;&#10;    @NotEmpty&#10;    private String url;&#10;&#10;    // No-argument constructor&#10;    public ShortenRequest() {&#10;        this.url = &quot;&quot;;&#10;    }&#10;&#10;    // All-argument constructor&#10;    public ShortenRequest(String url) {&#10;        this.url = url;&#10;    }&#10;&#10;    public String getUrl() {&#10;        return this.url;&#10;    }&#10;&#10;    public void setUrl(String url) {&#10;        this.url = url;&#10;    }&#10;}&#10;" Filename="ShortenRequest.java" Intrnl_Id="4"/>
+        <SrcFile Content="package com.example.urlshortener;&#10;&#10;import org.springframework.boot.SpringApplication;&#10;import org.springframework.boot.autoconfigure.SpringBootApplication;&#10;&#10;@SpringBootApplication&#10;public class UrlshortenerApplication {&#10;    public static void main(String[] args) {&#10;        SpringApplication.run(UrlshortenerApplication.class, args);&#10;    }&#10;}" Filename="UrlshortenerApplication.java" Intrnl_Id="5"/>
+        <SrcFile Content="package com.example.urlshortener.service;&#10;&#10;import jakarta.annotation.PostConstruct;&#10;import org.apache.commons.lang3.RandomStringUtils;&#10;import org.apache.commons.validator.routines.UrlValidator;&#10;import org.springframework.beans.factory.annotation.Value;&#10;import org.springframework.stereotype.Service;&#10;&#10;import java.util.Map;&#10;import java.util.Optional;&#10;import java.util.concurrent.ConcurrentHashMap;&#10;import java.util.concurrent.Semaphore;&#10;import java.util.concurrent.TimeUnit;&#10;&#10;@Service&#10;public class UrlService {&#10;&#10;    private final Map&lt;String, String&gt; shortToLongUrl = new ConcurrentHashMap&lt;String, String&gt;();&#10;    private final Map&lt;String, String&gt; longToShortUrl = new ConcurrentHashMap&lt;String, String&gt;();&#10;    private final UrlValidator urlValidator = new UrlValidator(new String[]{&quot;http&quot;, &quot;https&quot;});&#10;&#10;    @Value(&quot;${rate-limiting.enabled:false}&quot;)&#10;    private boolean rateLimitingEnabled;&#10;&#10;    @Value(&quot;${rate-limiting.permits:10}&quot;)&#10;    private int maxPermits;&#10;&#10;    private Semaphore semaphore;&#10;&#10;    @PostConstruct&#10;    public void init() {&#10;        if (rateLimitingEnabled) {&#10;            this.semaphore = new Semaphore(maxPermits, true);&#10;            System.out.println(&quot;✅ Rate limiting ENABLED with &quot; + maxPermits + &quot; permits.&quot;);&#10;        } else {&#10;            System.out.println(&quot;❌ Rate limiting DISABLED.&quot;);&#10;        }&#10;    }&#10;&#10;    public String shortenUrl(String longUrl) {&#10;        if (!urlValidator.isValid(longUrl)) {&#10;            throw new IllegalArgumentException(&quot;Invalid URL provided: &quot; + longUrl);&#10;        }&#10;&#10;        applyRateLimiting();&#10;&#10;        if (longToShortUrl.containsKey(longUrl)) {&#10;            return longToShortUrl.get(longUrl);&#10;        }&#10;&#10;        String shortCode = generateUniqueShortCode();&#10;        shortToLongUrl.put(shortCode, longUrl);&#10;        longToShortUrl.put(longUrl, shortCode);&#10;        return shortCode;&#10;    }&#10;&#10;    private void applyRateLimiting() {&#10;        if (!rateLimitingEnabled) {&#10;            return;&#10;        }&#10;&#10;        boolean permitAcquired = false;&#10;        try {&#10;            System.out.println(&quot;Applying rate limit delay...&quot;);&#10;            permitAcquired = semaphore.tryAcquire(500, TimeUnit.MILLISECONDS);&#10;            if (!permitAcquired) {&#10;                System.err.println(&quot;COULD NOT ACQUIRE SEMAPHORE PERMIT - SERVER TOO BUSY&quot;);&#10;                throw new RuntimeException(&quot;Server is too busy to handle the request.&quot;);&#10;            }&#10;&#10;            Thread.sleep(150);&#10;        } catch (InterruptedException e) {&#10;            Thread.currentThread().interrupt();&#10;            throw new RuntimeException(&quot;Request was interrupted.&quot;, e);&#10;        } finally {&#10;            if (permitAcquired) {&#10;                semaphore.release();&#10;            }&#10;        }&#10;    }&#10;&#10;    public Optional&lt;String&gt; getOriginalUrl(String shortCode) {&#10;        return Optional.&lt;String&gt;ofNullable(shortToLongUrl.get(shortCode));&#10;    }&#10;&#10;    public Map&lt;String, String&gt; getAllUrls() {&#10;        return shortToLongUrl;&#10;    }&#10;&#10;    private String generateUniqueShortCode() {&#10;        String shortCode;&#10;        do {&#10;            shortCode = RandomStringUtils.randomAlphanumeric(7);&#10;        } while (shortToLongUrl.containsKey(shortCode));&#10;        return shortCode;&#10;    }&#10;}&#10;" Filename="UrlService.java" Intrnl_Id="6"/>
     </SrcFileList>
     <CritList>
         <CritListEntry Name="org.codecover.model.utils.criteria.LoopCoverage" PluginName="org.codecover"/>
@@ -13,7 +14,7 @@
         <CritListEntry Name="org.codecover.model.utils.criteria.StatementCoverage" PluginName="org.codecover"/>
     </CritList>
     <BoolOpList>
-        <BoolOp Arity="1" Intrnl_Id="6" Name="not (!)">
+        <BoolOp Arity="1" Intrnl_Id="7" Name="not (!)">
             <BoolAssgnmntBoolMapList>
                 <MapEntry BoolAssgnmnt="1" Value="false"/>
                 <MapEntry BoolAssgnmnt="0" Value="true"/>
@@ -21,104 +22,200 @@
         </BoolOp>
     </BoolOpList>
     <HierarchyLvlTypeList>
-        <HierarchyLvlType EnglishName="package" IntrnlName="package" Intrnl_Id="7"/>
-        <HierarchyLvlType EnglishName="method" IntrnlName="method" Intrnl_Id="8"/>
-        <HierarchyLvlType EnglishName="class" IntrnlName="class" Intrnl_Id="9"/>
-        <HierarchyLvlType EnglishName="default package" IntrnlName="default package" Intrnl_Id="10"/>
+        <HierarchyLvlType EnglishName="package" IntrnlName="package" Intrnl_Id="8"/>
+        <HierarchyLvlType EnglishName="method" IntrnlName="method" Intrnl_Id="9"/>
+        <HierarchyLvlType EnglishName="class" IntrnlName="class" Intrnl_Id="10"/>
+        <HierarchyLvlType EnglishName="default package" IntrnlName="default package" Intrnl_Id="11"/>
     </HierarchyLvlTypeList>
     <MASTRoot>
-        <HierarchyLvl HierarchyLvlId="33" HierarchyLvlTypeId="10" Intrnl_Id="11" Name="default package">
+        <HierarchyLvl HierarchyLvlId="36" HierarchyLvlTypeId="11" Intrnl_Id="12" Name="default package">
             <Header/>
             <LocList/>
-            <HierarchyLvl HierarchyLvlId="32" HierarchyLvlTypeId="7" Intrnl_Id="12" Name="com">
+            <HierarchyLvl HierarchyLvlId="35" HierarchyLvlTypeId="8" Intrnl_Id="13" Name="com">
                 <Header/>
                 <LocList/>
-                <HierarchyLvl HierarchyLvlId="31" HierarchyLvlTypeId="7" Intrnl_Id="13" Name="example">
+                <HierarchyLvl HierarchyLvlId="34" HierarchyLvlTypeId="8" Intrnl_Id="14" Name="example">
                     <Header/>
                     <LocList/>
-                    <HierarchyLvl HierarchyLvlId="30" HierarchyLvlTypeId="7" Intrnl_Id="14" Name="urlshortener">
+                    <HierarchyLvl HierarchyLvlId="33" HierarchyLvlTypeId="8" Intrnl_Id="15" Name="urlshortener">
                         <Header/>
                         <LocList/>
-                        <HierarchyLvl HierarchyLvlId="27" HierarchyLvlTypeId="7" Intrnl_Id="15" Name="controller">
+                        <HierarchyLvl HierarchyLvlId="30" HierarchyLvlTypeId="8" Intrnl_Id="16" Name="controller">
                             <Header/>
                             <LocList/>
-                            <HierarchyLvl HierarchyLvlId="5" HierarchyLvlTypeId="9" Intrnl_Id="16" Name="UrlController">
+                            <HierarchyLvl HierarchyLvlId="29" HierarchyLvlTypeId="8" Intrnl_Id="17" Name="codecovertests">
+                                <Header/>
+                                <LocList/>
+                                <HierarchyLvl HierarchyLvlId="7" HierarchyLvlTypeId="10" Intrnl_Id="18" Name="urlControllerTester">
+                                    <Header>
+                                        <Loc EndOffset="630" SrcFileId="2" StartOffset="598"/>
+                                    </Header>
+                                    <LocList>
+                                        <Loc EndOffset="1671" SrcFileId="2" StartOffset="598"/>
+                                    </LocList>
+                                    <HierarchyLvl HierarchyLvlId="6" HierarchyLvlTypeId="9" Intrnl_Id="19" Name="main">
+                                        <Header>
+                                            <Loc EndOffset="675" SrcFileId="2" StartOffset="637"/>
+                                        </Header>
+                                        <LocList>
+                                            <Loc EndOffset="1669" SrcFileId="2" StartOffset="637"/>
+                                        </LocList>
+                                        <StmntSeq Intrnl_Id="20">
+                                            <LocList>
+                                                <Loc EndOffset="727" SrcFileId="2" StartOffset="686"/>
+                                                <Loc EndOffset="794" SrcFileId="2" StartOffset="737"/>
+                                                <Loc EndOffset="850" SrcFileId="2" StartOffset="804"/>
+                                                <Loc EndOffset="921" SrcFileId="2" StartOffset="859"/>
+                                                <Loc EndOffset="1008" SrcFileId="2" StartOffset="930"/>
+                                                <Loc EndOffset="1082" SrcFileId="2" StartOffset="1017"/>
+                                                <Loc EndOffset="1180" SrcFileId="2" StartOffset="1125"/>
+                                                <Loc EndOffset="1245" SrcFileId="2" StartOffset="1189"/>
+                                                <Loc EndOffset="1353" SrcFileId="2" StartOffset="1282"/>
+                                                <Loc EndOffset="1434" SrcFileId="2" StartOffset="1362"/>
+                                                <Loc EndOffset="1566" SrcFileId="2" StartOffset="1482"/>
+                                                <Loc EndOffset="1663" SrcFileId="2" StartOffset="1575"/>
+                                            </LocList>
+                                            <BasicStmnt CovItemId="S1" CovItemPrefix="com.example.urlshortener.controller.codecovertests.urlControllerTester.java" Intrnl_Id="21">
+                                                <LocList>
+                                                    <Loc EndOffset="727" SrcFileId="2" StartOffset="686"/>
+                                                </LocList>
+                                            </BasicStmnt>
+                                            <BasicStmnt CovItemId="S2" CovItemPrefix="com.example.urlshortener.controller.codecovertests.urlControllerTester.java" Intrnl_Id="22">
+                                                <LocList>
+                                                    <Loc EndOffset="794" SrcFileId="2" StartOffset="737"/>
+                                                </LocList>
+                                            </BasicStmnt>
+                                            <BasicStmnt CovItemId="S3" CovItemPrefix="com.example.urlshortener.controller.codecovertests.urlControllerTester.java" Intrnl_Id="23">
+                                                <LocList>
+                                                    <Loc EndOffset="850" SrcFileId="2" StartOffset="804"/>
+                                                </LocList>
+                                            </BasicStmnt>
+                                            <BasicStmnt CovItemId="S4" CovItemPrefix="com.example.urlshortener.controller.codecovertests.urlControllerTester.java" Intrnl_Id="24">
+                                                <LocList>
+                                                    <Loc EndOffset="921" SrcFileId="2" StartOffset="859"/>
+                                                </LocList>
+                                            </BasicStmnt>
+                                            <BasicStmnt CovItemId="S5" CovItemPrefix="com.example.urlshortener.controller.codecovertests.urlControllerTester.java" Intrnl_Id="25">
+                                                <LocList>
+                                                    <Loc EndOffset="1008" SrcFileId="2" StartOffset="930"/>
+                                                </LocList>
+                                            </BasicStmnt>
+                                            <BasicStmnt CovItemId="S6" CovItemPrefix="com.example.urlshortener.controller.codecovertests.urlControllerTester.java" Intrnl_Id="26">
+                                                <LocList>
+                                                    <Loc EndOffset="1082" SrcFileId="2" StartOffset="1017"/>
+                                                </LocList>
+                                            </BasicStmnt>
+                                            <BasicStmnt CovItemId="S7" CovItemPrefix="com.example.urlshortener.controller.codecovertests.urlControllerTester.java" Intrnl_Id="27">
+                                                <LocList>
+                                                    <Loc EndOffset="1180" SrcFileId="2" StartOffset="1125"/>
+                                                </LocList>
+                                            </BasicStmnt>
+                                            <BasicStmnt CovItemId="S8" CovItemPrefix="com.example.urlshortener.controller.codecovertests.urlControllerTester.java" Intrnl_Id="28">
+                                                <LocList>
+                                                    <Loc EndOffset="1245" SrcFileId="2" StartOffset="1189"/>
+                                                </LocList>
+                                            </BasicStmnt>
+                                            <BasicStmnt CovItemId="S9" CovItemPrefix="com.example.urlshortener.controller.codecovertests.urlControllerTester.java" Intrnl_Id="29">
+                                                <LocList>
+                                                    <Loc EndOffset="1353" SrcFileId="2" StartOffset="1282"/>
+                                                </LocList>
+                                            </BasicStmnt>
+                                            <BasicStmnt CovItemId="S10" CovItemPrefix="com.example.urlshortener.controller.codecovertests.urlControllerTester.java" Intrnl_Id="30">
+                                                <LocList>
+                                                    <Loc EndOffset="1434" SrcFileId="2" StartOffset="1362"/>
+                                                </LocList>
+                                            </BasicStmnt>
+                                            <BasicStmnt CovItemId="S11" CovItemPrefix="com.example.urlshortener.controller.codecovertests.urlControllerTester.java" Intrnl_Id="31">
+                                                <LocList>
+                                                    <Loc EndOffset="1566" SrcFileId="2" StartOffset="1482"/>
+                                                </LocList>
+                                            </BasicStmnt>
+                                            <BasicStmnt CovItemId="S12" CovItemPrefix="com.example.urlshortener.controller.codecovertests.urlControllerTester.java" Intrnl_Id="32">
+                                                <LocList>
+                                                    <Loc EndOffset="1663" SrcFileId="2" StartOffset="1575"/>
+                                                </LocList>
+                                            </BasicStmnt>
+                                        </StmntSeq>
+                                    </HierarchyLvl>
+                                </HierarchyLvl>
+                            </HierarchyLvl>
+                            <HierarchyLvl HierarchyLvlId="5" HierarchyLvlTypeId="10" Intrnl_Id="33" Name="UrlController">
                                 <Header>
                                     <Loc EndOffset="629" SrcFileId="1" StartOffset="526"/>
                                 </Header>
                                 <LocList>
                                     <Loc EndOffset="2820" SrcFileId="1" StartOffset="526"/>
                                 </LocList>
-                                <HierarchyLvl HierarchyLvlId="1" HierarchyLvlTypeId="8" Intrnl_Id="17" Name="UrlController">
+                                <HierarchyLvl HierarchyLvlId="1" HierarchyLvlTypeId="9" Intrnl_Id="34" Name="UrlController">
                                     <Header>
                                         <Loc EndOffset="722" SrcFileId="1" StartOffset="679"/>
                                     </Header>
                                     <LocList>
                                         <Loc EndOffset="768" SrcFileId="1" StartOffset="679"/>
                                     </LocList>
-                                    <StmntSeq Intrnl_Id="18">
+                                    <StmntSeq Intrnl_Id="35">
                                         <LocList>
                                             <Loc EndOffset="762" SrcFileId="1" StartOffset="733"/>
                                         </LocList>
-                                        <BasicStmnt CovItemId="S1" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Intrnl_Id="19">
+                                        <BasicStmnt CovItemId="S1" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Intrnl_Id="36">
                                             <LocList>
                                                 <Loc EndOffset="762" SrcFileId="1" StartOffset="733"/>
                                             </LocList>
                                         </BasicStmnt>
                                     </StmntSeq>
                                 </HierarchyLvl>
-                                <HierarchyLvl HierarchyLvlId="2" HierarchyLvlTypeId="8" Intrnl_Id="20" Name="shortenUrl">
+                                <HierarchyLvl HierarchyLvlId="2" HierarchyLvlTypeId="9" Intrnl_Id="37" Name="shortenUrl">
                                     <Header>
                                         <Loc EndOffset="904" SrcFileId="1" StartOffset="774"/>
                                     </Header>
                                     <LocList>
                                         <Loc EndOffset="1598" SrcFileId="1" StartOffset="774"/>
                                     </LocList>
-                                    <StmntSeq Intrnl_Id="21">
+                                    <StmntSeq Intrnl_Id="38">
                                         <LocList>
                                             <Loc EndOffset="990" SrcFileId="1" StartOffset="915"/>
                                             <Loc EndOffset="1592" SrcFileId="1" StartOffset="999"/>
                                         </LocList>
-                                        <BasicStmnt CovItemId="S2" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Intrnl_Id="22">
+                                        <BasicStmnt CovItemId="S2" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Intrnl_Id="39">
                                             <LocList>
                                                 <Loc EndOffset="990" SrcFileId="1" StartOffset="915"/>
                                             </LocList>
                                         </BasicStmnt>
-                                        <CondStmnt CovItemId="S3" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Intrnl_Id="23">
-                                            <Branch CovItemId="B1" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Implct="true" Intrnl_Id="24">
+                                        <CondStmnt CovItemId="S3" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Intrnl_Id="40">
+                                            <Branch CovItemId="B1" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Implct="true" Intrnl_Id="41">
                                                 <Cond/>
                                                 <LocList>
                                                     <Loc EndOffset="1310" SrcFileId="1" StartOffset="1003"/>
                                                 </LocList>
-                                                <StmntSeq Intrnl_Id="25">
+                                                <StmntSeq Intrnl_Id="42">
                                                     <LocList>
                                                         <Loc EndOffset="1076" SrcFileId="1" StartOffset="1017"/>
                                                         <Loc EndOffset="1175" SrcFileId="1" StartOffset="1089"/>
                                                     </LocList>
-                                                    <BasicStmnt CovItemId="S4" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Intrnl_Id="26">
+                                                    <BasicStmnt CovItemId="S4" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Intrnl_Id="43">
                                                         <LocList>
                                                             <Loc EndOffset="1076" SrcFileId="1" StartOffset="1017"/>
                                                         </LocList>
                                                     </BasicStmnt>
-                                                    <BasicStmnt CovItemId="S5" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Intrnl_Id="27">
+                                                    <BasicStmnt CovItemId="S5" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Intrnl_Id="44">
                                                         <LocList>
                                                             <Loc EndOffset="1175" SrcFileId="1" StartOffset="1089"/>
                                                         </LocList>
                                                     </BasicStmnt>
                                                 </StmntSeq>
                                             </Branch>
-                                            <Branch CovItemId="B2" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Implct="false" Intrnl_Id="28">
+                                            <Branch CovItemId="B2" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Implct="false" Intrnl_Id="45">
                                                 <Cond>
                                                     <Loc EndOffset="1345" SrcFileId="1" StartOffset="1311"/>
                                                 </Cond>
                                                 <LocList>
                                                     <Loc EndOffset="1592" SrcFileId="1" StartOffset="1346"/>
                                                 </LocList>
-                                                <StmntSeq Intrnl_Id="29">
+                                                <StmntSeq Intrnl_Id="46">
                                                     <LocList>
                                                         <Loc EndOffset="1447" SrcFileId="1" StartOffset="1360"/>
                                                     </LocList>
-                                                    <BasicStmnt CovItemId="S6" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Intrnl_Id="30">
+                                                    <BasicStmnt CovItemId="S6" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Intrnl_Id="47">
                                                         <LocList>
                                                             <Loc EndOffset="1447" SrcFileId="1" StartOffset="1360"/>
                                                         </LocList>
@@ -132,102 +229,102 @@
                                         </CondStmnt>
                                     </StmntSeq>
                                 </HierarchyLvl>
-                                <HierarchyLvl HierarchyLvlId="3" HierarchyLvlTypeId="8" Intrnl_Id="31" Name="getAllUrls">
+                                <HierarchyLvl HierarchyLvlId="3" HierarchyLvlTypeId="9" Intrnl_Id="48" Name="getAllUrls">
                                     <Header>
                                         <Loc EndOffset="1846" SrcFileId="1" StartOffset="1769"/>
                                     </Header>
                                     <LocList>
                                         <Loc EndOffset="2103" SrcFileId="1" StartOffset="1769"/>
                                     </LocList>
-                                    <StmntSeq Intrnl_Id="32">
+                                    <StmntSeq Intrnl_Id="49">
                                         <LocList>
                                             <Loc EndOffset="1911" SrcFileId="1" StartOffset="1857"/>
                                             <Loc EndOffset="1952" SrcFileId="1" StartOffset="1920"/>
                                             <Loc EndOffset="2023" SrcFileId="1" StartOffset="1961"/>
                                         </LocList>
-                                        <BasicStmnt CovItemId="S7" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Intrnl_Id="33">
+                                        <BasicStmnt CovItemId="S7" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Intrnl_Id="50">
                                             <LocList>
                                                 <Loc EndOffset="1911" SrcFileId="1" StartOffset="1857"/>
                                             </LocList>
                                         </BasicStmnt>
-                                        <BasicStmnt CovItemId="S8" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Intrnl_Id="34">
+                                        <BasicStmnt CovItemId="S8" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Intrnl_Id="51">
                                             <LocList>
                                                 <Loc EndOffset="1952" SrcFileId="1" StartOffset="1920"/>
                                             </LocList>
                                         </BasicStmnt>
-                                        <BasicStmnt CovItemId="S9" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Intrnl_Id="35">
+                                        <BasicStmnt CovItemId="S9" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Intrnl_Id="52">
                                             <LocList>
                                                 <Loc EndOffset="2023" SrcFileId="1" StartOffset="1961"/>
                                             </LocList>
                                         </BasicStmnt>
                                     </StmntSeq>
                                 </HierarchyLvl>
-                                <HierarchyLvl HierarchyLvlId="4" HierarchyLvlTypeId="8" Intrnl_Id="36" Name="redirectToOriginalUrl">
+                                <HierarchyLvl HierarchyLvlId="4" HierarchyLvlTypeId="9" Intrnl_Id="53" Name="redirectToOriginalUrl">
                                     <Header>
                                         <Loc EndOffset="2212" SrcFileId="1" StartOffset="2109"/>
                                     </Header>
                                     <LocList>
                                         <Loc EndOffset="2818" SrcFileId="1" StartOffset="2109"/>
                                     </LocList>
-                                    <StmntSeq Intrnl_Id="37">
+                                    <StmntSeq Intrnl_Id="54">
                                         <LocList>
                                             <Loc EndOffset="2292" SrcFileId="1" StartOffset="2223"/>
                                             <Loc EndOffset="2373" SrcFileId="1" StartOffset="2302"/>
                                             <Loc EndOffset="2812" SrcFileId="1" StartOffset="2383"/>
                                         </LocList>
-                                        <BasicStmnt CovItemId="S10" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Intrnl_Id="38">
+                                        <BasicStmnt CovItemId="S10" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Intrnl_Id="55">
                                             <LocList>
                                                 <Loc EndOffset="2292" SrcFileId="1" StartOffset="2223"/>
                                             </LocList>
                                         </BasicStmnt>
-                                        <BasicStmnt CovItemId="S11" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Intrnl_Id="39">
+                                        <BasicStmnt CovItemId="S11" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Intrnl_Id="56">
                                             <LocList>
                                                 <Loc EndOffset="2373" SrcFileId="1" StartOffset="2302"/>
                                             </LocList>
                                         </BasicStmnt>
-                                        <CondStmnt CovItemId="S12" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Intrnl_Id="40">
-                                            <Branch CovItemId="B3" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Implct="false" Intrnl_Id="41">
+                                        <CondStmnt CovItemId="S12" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Intrnl_Id="57">
+                                            <Branch CovItemId="B3" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Implct="false" Intrnl_Id="58">
                                                 <Cond/>
                                                 <LocList>
                                                     <Loc EndOffset="2728" SrcFileId="1" StartOffset="2420"/>
                                                 </LocList>
-                                                <StmntSeq Intrnl_Id="42">
+                                                <StmntSeq Intrnl_Id="59">
                                                     <LocList>
                                                         <Loc EndOffset="2473" SrcFileId="1" StartOffset="2434"/>
                                                         <Loc EndOffset="2526" SrcFileId="1" StartOffset="2486"/>
                                                         <Loc EndOffset="2576" SrcFileId="1" StartOffset="2539"/>
                                                         <Loc EndOffset="2646" SrcFileId="1" StartOffset="2589"/>
                                                     </LocList>
-                                                    <BasicStmnt CovItemId="S13" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Intrnl_Id="43">
+                                                    <BasicStmnt CovItemId="S13" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Intrnl_Id="60">
                                                         <LocList>
                                                             <Loc EndOffset="2473" SrcFileId="1" StartOffset="2434"/>
                                                         </LocList>
                                                     </BasicStmnt>
-                                                    <BasicStmnt CovItemId="S14" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Intrnl_Id="44">
+                                                    <BasicStmnt CovItemId="S14" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Intrnl_Id="61">
                                                         <LocList>
                                                             <Loc EndOffset="2526" SrcFileId="1" StartOffset="2486"/>
                                                         </LocList>
                                                     </BasicStmnt>
-                                                    <BasicStmnt CovItemId="S15" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Intrnl_Id="45">
+                                                    <BasicStmnt CovItemId="S15" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Intrnl_Id="62">
                                                         <LocList>
                                                             <Loc EndOffset="2576" SrcFileId="1" StartOffset="2539"/>
                                                         </LocList>
                                                     </BasicStmnt>
-                                                    <BasicStmnt CovItemId="S16" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Intrnl_Id="46">
+                                                    <BasicStmnt CovItemId="S16" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Intrnl_Id="63">
                                                         <LocList>
                                                             <Loc EndOffset="2646" SrcFileId="1" StartOffset="2589"/>
                                                         </LocList>
                                                     </BasicStmnt>
                                                 </StmntSeq>
                                             </Branch>
-                                            <Branch CovItemId="B4" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Implct="false" Intrnl_Id="47">
+                                            <Branch CovItemId="B4" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Implct="false" Intrnl_Id="64">
                                                 <Cond>
                                                     <Loc EndOffset="2733" SrcFileId="1" StartOffset="2729"/>
                                                 </Cond>
                                                 <LocList>
                                                     <Loc EndOffset="2812" SrcFileId="1" StartOffset="2734"/>
                                                 </LocList>
-                                                <StmntSeq Intrnl_Id="48">
+                                                <StmntSeq Intrnl_Id="65">
                                                     <LocList/>
                                                 </StmntSeq>
                                             </Branch>
@@ -235,8 +332,8 @@
                                             <LocList>
                                                 <Loc EndOffset="2812" SrcFileId="1" StartOffset="2383"/>
                                             </LocList>
-                                            <RootTerm CovItemId="C1" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Intrnl_Id="49">
-                                                <BasicBoolTerm Intrnl_Id="50">
+                                            <RootTerm CovItemId="C1" CovItemPrefix="com.example.urlshortener.controller.UrlController.java" Intrnl_Id="66">
+                                                <BasicBoolTerm Intrnl_Id="67">
                                                     <LocList>
                                                         <Loc EndOffset="2418" SrcFileId="1" StartOffset="2387"/>
                                                     </LocList>
@@ -247,618 +344,618 @@
                                 </HierarchyLvl>
                             </HierarchyLvl>
                         </HierarchyLvl>
-                        <HierarchyLvl HierarchyLvlId="28" HierarchyLvlTypeId="7" Intrnl_Id="51" Name="model">
+                        <HierarchyLvl HierarchyLvlId="31" HierarchyLvlTypeId="8" Intrnl_Id="68" Name="model">
                             <Header/>
                             <LocList/>
-                            <HierarchyLvl HierarchyLvlId="12" HierarchyLvlTypeId="9" Intrnl_Id="52" Name="UrlsResponse">
+                            <HierarchyLvl HierarchyLvlId="14" HierarchyLvlTypeId="10" Intrnl_Id="69" Name="UrlsResponse">
                                 <Header>
-                                    <Loc EndOffset="245" SrcFileId="2" StartOffset="220"/>
+                                    <Loc EndOffset="245" SrcFileId="3" StartOffset="220"/>
                                 </Header>
                                 <LocList>
-                                    <Loc EndOffset="951" SrcFileId="2" StartOffset="220"/>
+                                    <Loc EndOffset="951" SrcFileId="3" StartOffset="220"/>
                                 </LocList>
-                                <HierarchyLvl HierarchyLvlId="6" HierarchyLvlTypeId="8" Intrnl_Id="53" Name="UrlsResponse">
+                                <HierarchyLvl HierarchyLvlId="8" HierarchyLvlTypeId="9" Intrnl_Id="70" Name="UrlsResponse">
                                     <Header>
-                                        <Loc EndOffset="341" SrcFileId="2" StartOffset="320"/>
+                                        <Loc EndOffset="341" SrcFileId="3" StartOffset="320"/>
                                     </Header>
                                     <LocList>
-                                        <Loc EndOffset="429" SrcFileId="2" StartOffset="320"/>
+                                        <Loc EndOffset="429" SrcFileId="3" StartOffset="320"/>
                                     </LocList>
-                                    <StmntSeq Intrnl_Id="54">
+                                    <StmntSeq Intrnl_Id="71">
                                         <LocList>
-                                            <Loc EndOffset="394" SrcFileId="2" StartOffset="352"/>
-                                            <Loc EndOffset="423" SrcFileId="2" StartOffset="403"/>
+                                            <Loc EndOffset="394" SrcFileId="3" StartOffset="352"/>
+                                            <Loc EndOffset="423" SrcFileId="3" StartOffset="403"/>
                                         </LocList>
-                                        <BasicStmnt CovItemId="S1" CovItemPrefix="com.example.urlshortener.model.UrlsResponse.java" Intrnl_Id="55">
+                                        <BasicStmnt CovItemId="S1" CovItemPrefix="com.example.urlshortener.model.UrlsResponse.java" Intrnl_Id="72">
                                             <LocList>
-                                                <Loc EndOffset="394" SrcFileId="2" StartOffset="352"/>
+                                                <Loc EndOffset="394" SrcFileId="3" StartOffset="352"/>
                                             </LocList>
                                         </BasicStmnt>
-                                        <BasicStmnt CovItemId="S2" CovItemPrefix="com.example.urlshortener.model.UrlsResponse.java" Intrnl_Id="56">
+                                        <BasicStmnt CovItemId="S2" CovItemPrefix="com.example.urlshortener.model.UrlsResponse.java" Intrnl_Id="73">
                                             <LocList>
-                                                <Loc EndOffset="423" SrcFileId="2" StartOffset="403"/>
+                                                <Loc EndOffset="423" SrcFileId="3" StartOffset="403"/>
                                             </LocList>
                                         </BasicStmnt>
                                     </StmntSeq>
                                 </HierarchyLvl>
-                                <HierarchyLvl HierarchyLvlId="7" HierarchyLvlTypeId="8" Intrnl_Id="57" Name="UrlsResponse">
+                                <HierarchyLvl HierarchyLvlId="9" HierarchyLvlTypeId="9" Intrnl_Id="74" Name="UrlsResponse">
                                     <Header>
-                                        <Loc EndOffset="524" SrcFileId="2" StartOffset="463"/>
+                                        <Loc EndOffset="524" SrcFileId="3" StartOffset="463"/>
                                     </Header>
                                     <LocList>
-                                        <Loc EndOffset="596" SrcFileId="2" StartOffset="463"/>
+                                        <Loc EndOffset="596" SrcFileId="3" StartOffset="463"/>
                                     </LocList>
-                                    <StmntSeq Intrnl_Id="58">
+                                    <StmntSeq Intrnl_Id="75">
                                         <LocList>
-                                            <Loc EndOffset="552" SrcFileId="2" StartOffset="535"/>
-                                            <Loc EndOffset="590" SrcFileId="2" StartOffset="561"/>
+                                            <Loc EndOffset="552" SrcFileId="3" StartOffset="535"/>
+                                            <Loc EndOffset="590" SrcFileId="3" StartOffset="561"/>
                                         </LocList>
-                                        <BasicStmnt CovItemId="S3" CovItemPrefix="com.example.urlshortener.model.UrlsResponse.java" Intrnl_Id="59">
+                                        <BasicStmnt CovItemId="S3" CovItemPrefix="com.example.urlshortener.model.UrlsResponse.java" Intrnl_Id="76">
                                             <LocList>
-                                                <Loc EndOffset="552" SrcFileId="2" StartOffset="535"/>
+                                                <Loc EndOffset="552" SrcFileId="3" StartOffset="535"/>
                                             </LocList>
                                         </BasicStmnt>
-                                        <BasicStmnt CovItemId="S4" CovItemPrefix="com.example.urlshortener.model.UrlsResponse.java" Intrnl_Id="60">
+                                        <BasicStmnt CovItemId="S4" CovItemPrefix="com.example.urlshortener.model.UrlsResponse.java" Intrnl_Id="77">
                                             <LocList>
-                                                <Loc EndOffset="590" SrcFileId="2" StartOffset="561"/>
-                                            </LocList>
-                                        </BasicStmnt>
-                                    </StmntSeq>
-                                </HierarchyLvl>
-                                <HierarchyLvl HierarchyLvlId="8" HierarchyLvlTypeId="8" Intrnl_Id="61" Name="getUrls">
-                                    <Header>
-                                        <Loc EndOffset="665" SrcFileId="2" StartOffset="629"/>
-                                    </Header>
-                                    <LocList>
-                                        <Loc EndOffset="699" SrcFileId="2" StartOffset="629"/>
-                                    </LocList>
-                                </HierarchyLvl>
-                                <HierarchyLvl HierarchyLvlId="9" HierarchyLvlTypeId="8" Intrnl_Id="62" Name="setUrls">
-                                    <Header>
-                                        <Loc EndOffset="750" SrcFileId="2" StartOffset="705"/>
-                                    </Header>
-                                    <LocList>
-                                        <Loc EndOffset="784" SrcFileId="2" StartOffset="705"/>
-                                    </LocList>
-                                    <StmntSeq Intrnl_Id="63">
-                                        <LocList>
-                                            <Loc EndOffset="778" SrcFileId="2" StartOffset="761"/>
-                                        </LocList>
-                                        <BasicStmnt CovItemId="S5" CovItemPrefix="com.example.urlshortener.model.UrlsResponse.java" Intrnl_Id="64">
-                                            <LocList>
-                                                <Loc EndOffset="778" SrcFileId="2" StartOffset="761"/>
+                                                <Loc EndOffset="590" SrcFileId="3" StartOffset="561"/>
                                             </LocList>
                                         </BasicStmnt>
                                     </StmntSeq>
                                 </HierarchyLvl>
-                                <HierarchyLvl HierarchyLvlId="10" HierarchyLvlTypeId="8" Intrnl_Id="65" Name="getTotalCount">
+                                <HierarchyLvl HierarchyLvlId="10" HierarchyLvlTypeId="9" Intrnl_Id="78" Name="getUrls">
                                     <Header>
-                                        <Loc EndOffset="816" SrcFileId="2" StartOffset="790"/>
+                                        <Loc EndOffset="665" SrcFileId="3" StartOffset="629"/>
                                     </Header>
                                     <LocList>
-                                        <Loc EndOffset="856" SrcFileId="2" StartOffset="790"/>
+                                        <Loc EndOffset="699" SrcFileId="3" StartOffset="629"/>
                                     </LocList>
                                 </HierarchyLvl>
-                                <HierarchyLvl HierarchyLvlId="11" HierarchyLvlTypeId="8" Intrnl_Id="66" Name="setTotalCount">
+                                <HierarchyLvl HierarchyLvlId="11" HierarchyLvlTypeId="9" Intrnl_Id="79" Name="setUrls">
                                     <Header>
-                                        <Loc EndOffset="903" SrcFileId="2" StartOffset="862"/>
+                                        <Loc EndOffset="750" SrcFileId="3" StartOffset="705"/>
                                     </Header>
                                     <LocList>
-                                        <Loc EndOffset="949" SrcFileId="2" StartOffset="862"/>
+                                        <Loc EndOffset="784" SrcFileId="3" StartOffset="705"/>
                                     </LocList>
-                                    <StmntSeq Intrnl_Id="67">
+                                    <StmntSeq Intrnl_Id="80">
                                         <LocList>
-                                            <Loc EndOffset="943" SrcFileId="2" StartOffset="914"/>
+                                            <Loc EndOffset="778" SrcFileId="3" StartOffset="761"/>
                                         </LocList>
-                                        <BasicStmnt CovItemId="S6" CovItemPrefix="com.example.urlshortener.model.UrlsResponse.java" Intrnl_Id="68">
+                                        <BasicStmnt CovItemId="S5" CovItemPrefix="com.example.urlshortener.model.UrlsResponse.java" Intrnl_Id="81">
                                             <LocList>
-                                                <Loc EndOffset="943" SrcFileId="2" StartOffset="914"/>
+                                                <Loc EndOffset="778" SrcFileId="3" StartOffset="761"/>
+                                            </LocList>
+                                        </BasicStmnt>
+                                    </StmntSeq>
+                                </HierarchyLvl>
+                                <HierarchyLvl HierarchyLvlId="12" HierarchyLvlTypeId="9" Intrnl_Id="82" Name="getTotalCount">
+                                    <Header>
+                                        <Loc EndOffset="816" SrcFileId="3" StartOffset="790"/>
+                                    </Header>
+                                    <LocList>
+                                        <Loc EndOffset="856" SrcFileId="3" StartOffset="790"/>
+                                    </LocList>
+                                </HierarchyLvl>
+                                <HierarchyLvl HierarchyLvlId="13" HierarchyLvlTypeId="9" Intrnl_Id="83" Name="setTotalCount">
+                                    <Header>
+                                        <Loc EndOffset="903" SrcFileId="3" StartOffset="862"/>
+                                    </Header>
+                                    <LocList>
+                                        <Loc EndOffset="949" SrcFileId="3" StartOffset="862"/>
+                                    </LocList>
+                                    <StmntSeq Intrnl_Id="84">
+                                        <LocList>
+                                            <Loc EndOffset="943" SrcFileId="3" StartOffset="914"/>
+                                        </LocList>
+                                        <BasicStmnt CovItemId="S6" CovItemPrefix="com.example.urlshortener.model.UrlsResponse.java" Intrnl_Id="85">
+                                            <LocList>
+                                                <Loc EndOffset="943" SrcFileId="3" StartOffset="914"/>
                                             </LocList>
                                         </BasicStmnt>
                                     </StmntSeq>
                                 </HierarchyLvl>
                             </HierarchyLvl>
-                            <HierarchyLvl HierarchyLvlId="17" HierarchyLvlTypeId="9" Intrnl_Id="69" Name="ShortenRequest">
+                            <HierarchyLvl HierarchyLvlId="19" HierarchyLvlTypeId="10" Intrnl_Id="86" Name="ShortenRequest">
                                 <Header>
-                                    <Loc EndOffset="186" SrcFileId="3" StartOffset="159"/>
+                                    <Loc EndOffset="186" SrcFileId="4" StartOffset="159"/>
                                 </Header>
                                 <LocList>
-                                    <Loc EndOffset="552" SrcFileId="3" StartOffset="159"/>
+                                    <Loc EndOffset="552" SrcFileId="4" StartOffset="159"/>
                                 </LocList>
-                                <HierarchyLvl HierarchyLvlId="13" HierarchyLvlTypeId="8" Intrnl_Id="70" Name="ShortenRequest">
+                                <HierarchyLvl HierarchyLvlId="15" HierarchyLvlTypeId="9" Intrnl_Id="87" Name="ShortenRequest">
                                     <Header>
-                                        <Loc EndOffset="287" SrcFileId="3" StartOffset="264"/>
+                                        <Loc EndOffset="287" SrcFileId="4" StartOffset="264"/>
                                     </Header>
                                     <LocList>
-                                        <Loc EndOffset="318" SrcFileId="3" StartOffset="264"/>
+                                        <Loc EndOffset="318" SrcFileId="4" StartOffset="264"/>
                                     </LocList>
-                                    <StmntSeq Intrnl_Id="71">
+                                    <StmntSeq Intrnl_Id="88">
                                         <LocList>
-                                            <Loc EndOffset="312" SrcFileId="3" StartOffset="298"/>
+                                            <Loc EndOffset="312" SrcFileId="4" StartOffset="298"/>
                                         </LocList>
-                                        <BasicStmnt CovItemId="S1" CovItemPrefix="com.example.urlshortener.model.ShortenRequest.java" Intrnl_Id="72">
+                                        <BasicStmnt CovItemId="S1" CovItemPrefix="com.example.urlshortener.model.ShortenRequest.java" Intrnl_Id="89">
                                             <LocList>
-                                                <Loc EndOffset="312" SrcFileId="3" StartOffset="298"/>
+                                                <Loc EndOffset="312" SrcFileId="4" StartOffset="298"/>
                                             </LocList>
                                         </BasicStmnt>
                                     </StmntSeq>
                                 </HierarchyLvl>
-                                <HierarchyLvl HierarchyLvlId="14" HierarchyLvlTypeId="8" Intrnl_Id="73" Name="ShortenRequest">
+                                <HierarchyLvl HierarchyLvlId="16" HierarchyLvlTypeId="9" Intrnl_Id="90" Name="ShortenRequest">
                                     <Header>
-                                        <Loc EndOffset="389" SrcFileId="3" StartOffset="356"/>
+                                        <Loc EndOffset="389" SrcFileId="4" StartOffset="356"/>
                                     </Header>
                                     <LocList>
-                                        <Loc EndOffset="421" SrcFileId="3" StartOffset="356"/>
+                                        <Loc EndOffset="421" SrcFileId="4" StartOffset="356"/>
                                     </LocList>
-                                    <StmntSeq Intrnl_Id="74">
+                                    <StmntSeq Intrnl_Id="91">
                                         <LocList>
-                                            <Loc EndOffset="415" SrcFileId="3" StartOffset="400"/>
+                                            <Loc EndOffset="415" SrcFileId="4" StartOffset="400"/>
                                         </LocList>
-                                        <BasicStmnt CovItemId="S2" CovItemPrefix="com.example.urlshortener.model.ShortenRequest.java" Intrnl_Id="75">
+                                        <BasicStmnt CovItemId="S2" CovItemPrefix="com.example.urlshortener.model.ShortenRequest.java" Intrnl_Id="92">
                                             <LocList>
-                                                <Loc EndOffset="415" SrcFileId="3" StartOffset="400"/>
+                                                <Loc EndOffset="415" SrcFileId="4" StartOffset="400"/>
                                             </LocList>
                                         </BasicStmnt>
                                     </StmntSeq>
                                 </HierarchyLvl>
-                                <HierarchyLvl HierarchyLvlId="15" HierarchyLvlTypeId="8" Intrnl_Id="76" Name="getUrl">
+                                <HierarchyLvl HierarchyLvlId="17" HierarchyLvlTypeId="9" Intrnl_Id="93" Name="getUrl">
                                     <Header>
-                                        <Loc EndOffset="449" SrcFileId="3" StartOffset="427"/>
+                                        <Loc EndOffset="449" SrcFileId="4" StartOffset="427"/>
                                     </Header>
                                     <LocList>
-                                        <Loc EndOffset="482" SrcFileId="3" StartOffset="427"/>
+                                        <Loc EndOffset="482" SrcFileId="4" StartOffset="427"/>
                                     </LocList>
                                 </HierarchyLvl>
-                                <HierarchyLvl HierarchyLvlId="16" HierarchyLvlTypeId="8" Intrnl_Id="77" Name="setUrl">
+                                <HierarchyLvl HierarchyLvlId="18" HierarchyLvlTypeId="9" Intrnl_Id="94" Name="setUrl">
                                     <Header>
-                                        <Loc EndOffset="518" SrcFileId="3" StartOffset="488"/>
+                                        <Loc EndOffset="518" SrcFileId="4" StartOffset="488"/>
                                     </Header>
                                     <LocList>
-                                        <Loc EndOffset="550" SrcFileId="3" StartOffset="488"/>
+                                        <Loc EndOffset="550" SrcFileId="4" StartOffset="488"/>
                                     </LocList>
-                                    <StmntSeq Intrnl_Id="78">
+                                    <StmntSeq Intrnl_Id="95">
                                         <LocList>
-                                            <Loc EndOffset="544" SrcFileId="3" StartOffset="529"/>
+                                            <Loc EndOffset="544" SrcFileId="4" StartOffset="529"/>
                                         </LocList>
-                                        <BasicStmnt CovItemId="S3" CovItemPrefix="com.example.urlshortener.model.ShortenRequest.java" Intrnl_Id="79">
+                                        <BasicStmnt CovItemId="S3" CovItemPrefix="com.example.urlshortener.model.ShortenRequest.java" Intrnl_Id="96">
                                             <LocList>
-                                                <Loc EndOffset="544" SrcFileId="3" StartOffset="529"/>
+                                                <Loc EndOffset="544" SrcFileId="4" StartOffset="529"/>
                                             </LocList>
                                         </BasicStmnt>
                                     </StmntSeq>
                                 </HierarchyLvl>
                             </HierarchyLvl>
                         </HierarchyLvl>
-                        <HierarchyLvl HierarchyLvlId="29" HierarchyLvlTypeId="7" Intrnl_Id="80" Name="service">
+                        <HierarchyLvl HierarchyLvlId="32" HierarchyLvlTypeId="8" Intrnl_Id="97" Name="service">
                             <Header/>
                             <LocList/>
-                            <HierarchyLvl HierarchyLvlId="26" HierarchyLvlTypeId="9" Intrnl_Id="81" Name="UrlService">
+                            <HierarchyLvl HierarchyLvlId="28" HierarchyLvlTypeId="10" Intrnl_Id="98" Name="UrlService">
                                 <Header>
-                                    <Loc EndOffset="507" SrcFileId="5" StartOffset="475"/>
+                                    <Loc EndOffset="507" SrcFileId="6" StartOffset="475"/>
                                 </Header>
                                 <LocList>
-                                    <Loc EndOffset="3149" SrcFileId="5" StartOffset="475"/>
+                                    <Loc EndOffset="3149" SrcFileId="6" StartOffset="475"/>
                                 </LocList>
-                                <StmntSeq Intrnl_Id="82">
+                                <StmntSeq Intrnl_Id="99">
                                     <LocList>
-                                        <Loc EndOffset="606" SrcFileId="5" StartOffset="515"/>
-                                        <Loc EndOffset="702" SrcFileId="5" StartOffset="611"/>
-                                        <Loc EndOffset="797" SrcFileId="5" StartOffset="707"/>
+                                        <Loc EndOffset="606" SrcFileId="6" StartOffset="515"/>
+                                        <Loc EndOffset="702" SrcFileId="6" StartOffset="611"/>
+                                        <Loc EndOffset="797" SrcFileId="6" StartOffset="707"/>
                                     </LocList>
-                                    <BasicStmnt CovItemId="S1" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="83">
+                                    <BasicStmnt CovItemId="S1" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="100">
                                         <LocList>
-                                            <Loc EndOffset="606" SrcFileId="5" StartOffset="515"/>
+                                            <Loc EndOffset="606" SrcFileId="6" StartOffset="515"/>
                                         </LocList>
                                     </BasicStmnt>
-                                    <BasicStmnt CovItemId="S2" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="84">
+                                    <BasicStmnt CovItemId="S2" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="101">
                                         <LocList>
-                                            <Loc EndOffset="702" SrcFileId="5" StartOffset="611"/>
+                                            <Loc EndOffset="702" SrcFileId="6" StartOffset="611"/>
                                         </LocList>
                                     </BasicStmnt>
-                                    <BasicStmnt CovItemId="S3" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="85">
+                                    <BasicStmnt CovItemId="S3" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="102">
                                         <LocList>
-                                            <Loc EndOffset="797" SrcFileId="5" StartOffset="707"/>
+                                            <Loc EndOffset="797" SrcFileId="6" StartOffset="707"/>
                                         </LocList>
                                     </BasicStmnt>
                                 </StmntSeq>
-                                <HierarchyLvl HierarchyLvlId="20" HierarchyLvlTypeId="8" Intrnl_Id="86" Name="init">
+                                <HierarchyLvl HierarchyLvlId="22" HierarchyLvlTypeId="9" Intrnl_Id="103" Name="init">
                                     <Header>
-                                        <Loc EndOffset="1032" SrcFileId="5" StartOffset="995"/>
+                                        <Loc EndOffset="1032" SrcFileId="6" StartOffset="995"/>
                                     </Header>
                                     <LocList>
-                                        <Loc EndOffset="1317" SrcFileId="5" StartOffset="995"/>
+                                        <Loc EndOffset="1317" SrcFileId="6" StartOffset="995"/>
                                     </LocList>
-                                    <StmntSeq Intrnl_Id="87">
+                                    <StmntSeq Intrnl_Id="104">
                                         <LocList>
-                                            <Loc EndOffset="1311" SrcFileId="5" StartOffset="1043"/>
+                                            <Loc EndOffset="1311" SrcFileId="6" StartOffset="1043"/>
                                         </LocList>
-                                        <CondStmnt CovItemId="S4" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="88">
-                                            <Branch CovItemId="B1" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Implct="false" Intrnl_Id="89">
+                                        <CondStmnt CovItemId="S4" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="105">
+                                            <Branch CovItemId="B1" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Implct="false" Intrnl_Id="106">
                                                 <Cond/>
                                                 <LocList>
-                                                    <Loc EndOffset="1233" SrcFileId="5" StartOffset="1068"/>
+                                                    <Loc EndOffset="1233" SrcFileId="6" StartOffset="1068"/>
                                                 </LocList>
-                                                <StmntSeq Intrnl_Id="90">
+                                                <StmntSeq Intrnl_Id="107">
                                                     <LocList>
-                                                        <Loc EndOffset="1131" SrcFileId="5" StartOffset="1082"/>
-                                                        <Loc EndOffset="1223" SrcFileId="5" StartOffset="1144"/>
+                                                        <Loc EndOffset="1131" SrcFileId="6" StartOffset="1082"/>
+                                                        <Loc EndOffset="1223" SrcFileId="6" StartOffset="1144"/>
                                                     </LocList>
-                                                    <BasicStmnt CovItemId="S5" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="91">
+                                                    <BasicStmnt CovItemId="S5" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="108">
                                                         <LocList>
-                                                            <Loc EndOffset="1131" SrcFileId="5" StartOffset="1082"/>
+                                                            <Loc EndOffset="1131" SrcFileId="6" StartOffset="1082"/>
                                                         </LocList>
                                                     </BasicStmnt>
-                                                    <BasicStmnt CovItemId="S6" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="92">
+                                                    <BasicStmnt CovItemId="S6" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="109">
                                                         <LocList>
-                                                            <Loc EndOffset="1223" SrcFileId="5" StartOffset="1144"/>
+                                                            <Loc EndOffset="1223" SrcFileId="6" StartOffset="1144"/>
                                                         </LocList>
                                                     </BasicStmnt>
                                                 </StmntSeq>
                                             </Branch>
-                                            <Branch CovItemId="B2" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Implct="false" Intrnl_Id="93">
+                                            <Branch CovItemId="B2" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Implct="false" Intrnl_Id="110">
                                                 <Cond>
-                                                    <Loc EndOffset="1238" SrcFileId="5" StartOffset="1234"/>
+                                                    <Loc EndOffset="1238" SrcFileId="6" StartOffset="1234"/>
                                                 </Cond>
                                                 <LocList>
-                                                    <Loc EndOffset="1311" SrcFileId="5" StartOffset="1239"/>
-                                                </LocList>
-                                                <StmntSeq Intrnl_Id="94">
-                                                    <LocList>
-                                                        <Loc EndOffset="1301" SrcFileId="5" StartOffset="1253"/>
-                                                    </LocList>
-                                                    <BasicStmnt CovItemId="S7" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="95">
-                                                        <LocList>
-                                                            <Loc EndOffset="1301" SrcFileId="5" StartOffset="1253"/>
-                                                        </LocList>
-                                                    </BasicStmnt>
-                                                </StmntSeq>
-                                            </Branch>
-                                            <Keyword EndOffset="1045" SrcFileId="5" StartOffset="1043"/>
-                                            <LocList>
-                                                <Loc EndOffset="1311" SrcFileId="5" StartOffset="1043"/>
-                                            </LocList>
-                                            <RootTerm CovItemId="C1" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="96">
-                                                <BasicBoolTerm Intrnl_Id="97">
-                                                    <LocList>
-                                                        <Loc EndOffset="1066" SrcFileId="5" StartOffset="1047"/>
-                                                    </LocList>
-                                                </BasicBoolTerm>
-                                            </RootTerm>
-                                        </CondStmnt>
-                                    </StmntSeq>
-                                </HierarchyLvl>
-                                <HierarchyLvl HierarchyLvlId="21" HierarchyLvlTypeId="8" Intrnl_Id="98" Name="shortenUrl">
-                                    <Header>
-                                        <Loc EndOffset="1363" SrcFileId="5" StartOffset="1323"/>
-                                    </Header>
-                                    <LocList>
-                                        <Loc EndOffset="1828" SrcFileId="5" StartOffset="1323"/>
-                                    </LocList>
-                                    <StmntSeq Intrnl_Id="99">
-                                        <LocList>
-                                            <Loc EndOffset="1505" SrcFileId="5" StartOffset="1374"/>
-                                            <Loc EndOffset="1535" SrcFileId="5" StartOffset="1515"/>
-                                            <Loc EndOffset="1645" SrcFileId="5" StartOffset="1545"/>
-                                            <Loc EndOffset="1700" SrcFileId="5" StartOffset="1655"/>
-                                            <Loc EndOffset="1748" SrcFileId="5" StartOffset="1709"/>
-                                            <Loc EndOffset="1796" SrcFileId="5" StartOffset="1757"/>
-                                        </LocList>
-                                        <CondStmnt CovItemId="S8" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="100">
-                                            <Branch CovItemId="B3" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Implct="false" Intrnl_Id="101">
-                                                <Cond/>
-                                                <LocList>
-                                                    <Loc EndOffset="1505" SrcFileId="5" StartOffset="1410"/>
-                                                </LocList>
-                                                <StmntSeq Intrnl_Id="102">
-                                                    <LocList/>
-                                                </StmntSeq>
-                                            </Branch>
-                                            <Branch CovItemId="B4" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Implct="true" Intrnl_Id="103">
-                                                <Cond/>
-                                                <LocList/>
-                                                <StmntSeq Intrnl_Id="104">
-                                                    <LocList/>
-                                                </StmntSeq>
-                                            </Branch>
-                                            <Keyword EndOffset="1376" SrcFileId="5" StartOffset="1374"/>
-                                            <LocList>
-                                                <Loc EndOffset="1505" SrcFileId="5" StartOffset="1374"/>
-                                            </LocList>
-                                            <RootTerm CovItemId="C2" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="105">
-                                                <OpTerm BooleanOpId="6" Intrnl_Id="106">
-                                                    <BasicBoolTerm Intrnl_Id="107">
-                                                        <LocList>
-                                                            <Loc EndOffset="1408" SrcFileId="5" StartOffset="1379"/>
-                                                        </LocList>
-                                                    </BasicBoolTerm>
-                                                    <LocList>
-                                                        <Loc EndOffset="1379" SrcFileId="5" StartOffset="1378"/>
-                                                    </LocList>
-                                                </OpTerm>
-                                            </RootTerm>
-                                        </CondStmnt>
-                                        <BasicStmnt CovItemId="S9" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="108">
-                                            <LocList>
-                                                <Loc EndOffset="1535" SrcFileId="5" StartOffset="1515"/>
-                                            </LocList>
-                                        </BasicStmnt>
-                                        <CondStmnt CovItemId="S10" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="109">
-                                            <Branch CovItemId="B5" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Implct="false" Intrnl_Id="110">
-                                                <Cond/>
-                                                <LocList>
-                                                    <Loc EndOffset="1645" SrcFileId="5" StartOffset="1586"/>
+                                                    <Loc EndOffset="1311" SrcFileId="6" StartOffset="1239"/>
                                                 </LocList>
                                                 <StmntSeq Intrnl_Id="111">
-                                                    <LocList/>
-                                                </StmntSeq>
-                                            </Branch>
-                                            <Branch CovItemId="B6" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Implct="true" Intrnl_Id="112">
-                                                <Cond/>
-                                                <LocList/>
-                                                <StmntSeq Intrnl_Id="113">
-                                                    <LocList/>
-                                                </StmntSeq>
-                                            </Branch>
-                                            <Keyword EndOffset="1547" SrcFileId="5" StartOffset="1545"/>
-                                            <LocList>
-                                                <Loc EndOffset="1645" SrcFileId="5" StartOffset="1545"/>
-                                            </LocList>
-                                            <RootTerm CovItemId="C3" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="114">
-                                                <BasicBoolTerm Intrnl_Id="115">
                                                     <LocList>
-                                                        <Loc EndOffset="1584" SrcFileId="5" StartOffset="1549"/>
+                                                        <Loc EndOffset="1301" SrcFileId="6" StartOffset="1253"/>
+                                                    </LocList>
+                                                    <BasicStmnt CovItemId="S7" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="112">
+                                                        <LocList>
+                                                            <Loc EndOffset="1301" SrcFileId="6" StartOffset="1253"/>
+                                                        </LocList>
+                                                    </BasicStmnt>
+                                                </StmntSeq>
+                                            </Branch>
+                                            <Keyword EndOffset="1045" SrcFileId="6" StartOffset="1043"/>
+                                            <LocList>
+                                                <Loc EndOffset="1311" SrcFileId="6" StartOffset="1043"/>
+                                            </LocList>
+                                            <RootTerm CovItemId="C1" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="113">
+                                                <BasicBoolTerm Intrnl_Id="114">
+                                                    <LocList>
+                                                        <Loc EndOffset="1066" SrcFileId="6" StartOffset="1047"/>
                                                     </LocList>
                                                 </BasicBoolTerm>
                                             </RootTerm>
                                         </CondStmnt>
-                                        <BasicStmnt CovItemId="S11" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="116">
-                                            <LocList>
-                                                <Loc EndOffset="1700" SrcFileId="5" StartOffset="1655"/>
-                                            </LocList>
-                                        </BasicStmnt>
-                                        <BasicStmnt CovItemId="S12" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="117">
-                                            <LocList>
-                                                <Loc EndOffset="1748" SrcFileId="5" StartOffset="1709"/>
-                                            </LocList>
-                                        </BasicStmnt>
-                                        <BasicStmnt CovItemId="S13" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="118">
-                                            <LocList>
-                                                <Loc EndOffset="1796" SrcFileId="5" StartOffset="1757"/>
-                                            </LocList>
-                                        </BasicStmnt>
                                     </StmntSeq>
                                 </HierarchyLvl>
-                                <HierarchyLvl HierarchyLvlId="22" HierarchyLvlTypeId="8" Intrnl_Id="119" Name="applyRateLimiting">
+                                <HierarchyLvl HierarchyLvlId="23" HierarchyLvlTypeId="9" Intrnl_Id="115" Name="shortenUrl">
                                     <Header>
-                                        <Loc EndOffset="1866" SrcFileId="5" StartOffset="1834"/>
+                                        <Loc EndOffset="1363" SrcFileId="6" StartOffset="1323"/>
                                     </Header>
                                     <LocList>
-                                        <Loc EndOffset="2677" SrcFileId="5" StartOffset="1834"/>
+                                        <Loc EndOffset="1828" SrcFileId="6" StartOffset="1323"/>
                                     </LocList>
-                                    <StmntSeq Intrnl_Id="120">
+                                    <StmntSeq Intrnl_Id="116">
                                         <LocList>
-                                            <Loc EndOffset="1934" SrcFileId="5" StartOffset="1877"/>
-                                            <Loc EndOffset="1975" SrcFileId="5" StartOffset="1944"/>
-                                            <Loc EndOffset="2566" SrcFileId="5" StartOffset="1984"/>
-                                            <Loc EndOffset="2661" SrcFileId="5" StartOffset="2589"/>
+                                            <Loc EndOffset="1505" SrcFileId="6" StartOffset="1374"/>
+                                            <Loc EndOffset="1535" SrcFileId="6" StartOffset="1515"/>
+                                            <Loc EndOffset="1645" SrcFileId="6" StartOffset="1545"/>
+                                            <Loc EndOffset="1700" SrcFileId="6" StartOffset="1655"/>
+                                            <Loc EndOffset="1748" SrcFileId="6" StartOffset="1709"/>
+                                            <Loc EndOffset="1796" SrcFileId="6" StartOffset="1757"/>
                                         </LocList>
-                                        <CondStmnt CovItemId="S14" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="121">
-                                            <Branch CovItemId="B7" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Implct="false" Intrnl_Id="122">
+                                        <CondStmnt CovItemId="S8" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="117">
+                                            <Branch CovItemId="B3" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Implct="false" Intrnl_Id="118">
                                                 <Cond/>
                                                 <LocList>
-                                                    <Loc EndOffset="1934" SrcFileId="5" StartOffset="1903"/>
+                                                    <Loc EndOffset="1505" SrcFileId="6" StartOffset="1410"/>
                                                 </LocList>
-                                                <StmntSeq Intrnl_Id="123">
+                                                <StmntSeq Intrnl_Id="119">
                                                     <LocList/>
                                                 </StmntSeq>
                                             </Branch>
-                                            <Branch CovItemId="B8" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Implct="true" Intrnl_Id="124">
+                                            <Branch CovItemId="B4" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Implct="true" Intrnl_Id="120">
                                                 <Cond/>
                                                 <LocList/>
-                                                <StmntSeq Intrnl_Id="125">
+                                                <StmntSeq Intrnl_Id="121">
                                                     <LocList/>
                                                 </StmntSeq>
                                             </Branch>
-                                            <Keyword EndOffset="1879" SrcFileId="5" StartOffset="1877"/>
+                                            <Keyword EndOffset="1376" SrcFileId="6" StartOffset="1374"/>
                                             <LocList>
-                                                <Loc EndOffset="1934" SrcFileId="5" StartOffset="1877"/>
+                                                <Loc EndOffset="1505" SrcFileId="6" StartOffset="1374"/>
                                             </LocList>
-                                            <RootTerm CovItemId="C4" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="126">
-                                                <OpTerm BooleanOpId="6" Intrnl_Id="127">
-                                                    <BasicBoolTerm Intrnl_Id="128">
+                                            <RootTerm CovItemId="C2" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="122">
+                                                <OpTerm BooleanOpId="7" Intrnl_Id="123">
+                                                    <BasicBoolTerm Intrnl_Id="124">
                                                         <LocList>
-                                                            <Loc EndOffset="1901" SrcFileId="5" StartOffset="1882"/>
+                                                            <Loc EndOffset="1408" SrcFileId="6" StartOffset="1379"/>
                                                         </LocList>
                                                     </BasicBoolTerm>
                                                     <LocList>
-                                                        <Loc EndOffset="1882" SrcFileId="5" StartOffset="1881"/>
+                                                        <Loc EndOffset="1379" SrcFileId="6" StartOffset="1378"/>
                                                     </LocList>
                                                 </OpTerm>
                                             </RootTerm>
                                         </CondStmnt>
-                                        <BasicStmnt CovItemId="S15" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="129">
+                                        <BasicStmnt CovItemId="S9" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="125">
                                             <LocList>
-                                                <Loc EndOffset="1975" SrcFileId="5" StartOffset="1944"/>
+                                                <Loc EndOffset="1535" SrcFileId="6" StartOffset="1515"/>
                                             </LocList>
                                         </BasicStmnt>
-                                        <CondStmnt CovItemId="S16" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="130">
-                                            <Branch CovItemId="B9" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Implct="true" Intrnl_Id="131">
+                                        <CondStmnt CovItemId="S10" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="126">
+                                            <Branch CovItemId="B5" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Implct="false" Intrnl_Id="127">
                                                 <Cond/>
                                                 <LocList>
-                                                    <Loc EndOffset="2404" SrcFileId="5" StartOffset="1988"/>
+                                                    <Loc EndOffset="1645" SrcFileId="6" StartOffset="1586"/>
                                                 </LocList>
-                                                <StmntSeq Intrnl_Id="132">
+                                                <StmntSeq Intrnl_Id="128">
+                                                    <LocList/>
+                                                </StmntSeq>
+                                            </Branch>
+                                            <Branch CovItemId="B6" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Implct="true" Intrnl_Id="129">
+                                                <Cond/>
+                                                <LocList/>
+                                                <StmntSeq Intrnl_Id="130">
+                                                    <LocList/>
+                                                </StmntSeq>
+                                            </Branch>
+                                            <Keyword EndOffset="1547" SrcFileId="6" StartOffset="1545"/>
+                                            <LocList>
+                                                <Loc EndOffset="1645" SrcFileId="6" StartOffset="1545"/>
+                                            </LocList>
+                                            <RootTerm CovItemId="C3" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="131">
+                                                <BasicBoolTerm Intrnl_Id="132">
                                                     <LocList>
-                                                        <Loc EndOffset="2053" SrcFileId="5" StartOffset="2002"/>
-                                                        <Loc EndOffset="2132" SrcFileId="5" StartOffset="2066"/>
-                                                        <Loc EndOffset="2362" SrcFileId="5" StartOffset="2145"/>
-                                                        <Loc EndOffset="2394" SrcFileId="5" StartOffset="2376"/>
+                                                        <Loc EndOffset="1584" SrcFileId="6" StartOffset="1549"/>
                                                     </LocList>
-                                                    <BasicStmnt CovItemId="S17" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="133">
+                                                </BasicBoolTerm>
+                                            </RootTerm>
+                                        </CondStmnt>
+                                        <BasicStmnt CovItemId="S11" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="133">
+                                            <LocList>
+                                                <Loc EndOffset="1700" SrcFileId="6" StartOffset="1655"/>
+                                            </LocList>
+                                        </BasicStmnt>
+                                        <BasicStmnt CovItemId="S12" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="134">
+                                            <LocList>
+                                                <Loc EndOffset="1748" SrcFileId="6" StartOffset="1709"/>
+                                            </LocList>
+                                        </BasicStmnt>
+                                        <BasicStmnt CovItemId="S13" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="135">
+                                            <LocList>
+                                                <Loc EndOffset="1796" SrcFileId="6" StartOffset="1757"/>
+                                            </LocList>
+                                        </BasicStmnt>
+                                    </StmntSeq>
+                                </HierarchyLvl>
+                                <HierarchyLvl HierarchyLvlId="24" HierarchyLvlTypeId="9" Intrnl_Id="136" Name="applyRateLimiting">
+                                    <Header>
+                                        <Loc EndOffset="1866" SrcFileId="6" StartOffset="1834"/>
+                                    </Header>
+                                    <LocList>
+                                        <Loc EndOffset="2677" SrcFileId="6" StartOffset="1834"/>
+                                    </LocList>
+                                    <StmntSeq Intrnl_Id="137">
+                                        <LocList>
+                                            <Loc EndOffset="1934" SrcFileId="6" StartOffset="1877"/>
+                                            <Loc EndOffset="1975" SrcFileId="6" StartOffset="1944"/>
+                                            <Loc EndOffset="2566" SrcFileId="6" StartOffset="1984"/>
+                                            <Loc EndOffset="2661" SrcFileId="6" StartOffset="2589"/>
+                                        </LocList>
+                                        <CondStmnt CovItemId="S14" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="138">
+                                            <Branch CovItemId="B7" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Implct="false" Intrnl_Id="139">
+                                                <Cond/>
+                                                <LocList>
+                                                    <Loc EndOffset="1934" SrcFileId="6" StartOffset="1903"/>
+                                                </LocList>
+                                                <StmntSeq Intrnl_Id="140">
+                                                    <LocList/>
+                                                </StmntSeq>
+                                            </Branch>
+                                            <Branch CovItemId="B8" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Implct="true" Intrnl_Id="141">
+                                                <Cond/>
+                                                <LocList/>
+                                                <StmntSeq Intrnl_Id="142">
+                                                    <LocList/>
+                                                </StmntSeq>
+                                            </Branch>
+                                            <Keyword EndOffset="1879" SrcFileId="6" StartOffset="1877"/>
+                                            <LocList>
+                                                <Loc EndOffset="1934" SrcFileId="6" StartOffset="1877"/>
+                                            </LocList>
+                                            <RootTerm CovItemId="C4" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="143">
+                                                <OpTerm BooleanOpId="7" Intrnl_Id="144">
+                                                    <BasicBoolTerm Intrnl_Id="145">
                                                         <LocList>
-                                                            <Loc EndOffset="2053" SrcFileId="5" StartOffset="2002"/>
+                                                            <Loc EndOffset="1901" SrcFileId="6" StartOffset="1882"/>
+                                                        </LocList>
+                                                    </BasicBoolTerm>
+                                                    <LocList>
+                                                        <Loc EndOffset="1882" SrcFileId="6" StartOffset="1881"/>
+                                                    </LocList>
+                                                </OpTerm>
+                                            </RootTerm>
+                                        </CondStmnt>
+                                        <BasicStmnt CovItemId="S15" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="146">
+                                            <LocList>
+                                                <Loc EndOffset="1975" SrcFileId="6" StartOffset="1944"/>
+                                            </LocList>
+                                        </BasicStmnt>
+                                        <CondStmnt CovItemId="S16" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="147">
+                                            <Branch CovItemId="B9" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Implct="true" Intrnl_Id="148">
+                                                <Cond/>
+                                                <LocList>
+                                                    <Loc EndOffset="2404" SrcFileId="6" StartOffset="1988"/>
+                                                </LocList>
+                                                <StmntSeq Intrnl_Id="149">
+                                                    <LocList>
+                                                        <Loc EndOffset="2053" SrcFileId="6" StartOffset="2002"/>
+                                                        <Loc EndOffset="2132" SrcFileId="6" StartOffset="2066"/>
+                                                        <Loc EndOffset="2362" SrcFileId="6" StartOffset="2145"/>
+                                                        <Loc EndOffset="2394" SrcFileId="6" StartOffset="2376"/>
+                                                    </LocList>
+                                                    <BasicStmnt CovItemId="S17" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="150">
+                                                        <LocList>
+                                                            <Loc EndOffset="2053" SrcFileId="6" StartOffset="2002"/>
                                                         </LocList>
                                                     </BasicStmnt>
-                                                    <BasicStmnt CovItemId="S18" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="134">
+                                                    <BasicStmnt CovItemId="S18" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="151">
                                                         <LocList>
-                                                            <Loc EndOffset="2132" SrcFileId="5" StartOffset="2066"/>
+                                                            <Loc EndOffset="2132" SrcFileId="6" StartOffset="2066"/>
                                                         </LocList>
                                                     </BasicStmnt>
-                                                    <CondStmnt CovItemId="S19" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="135">
-                                                        <Branch CovItemId="B10" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Implct="false" Intrnl_Id="136">
+                                                    <CondStmnt CovItemId="S19" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="152">
+                                                        <Branch CovItemId="B10" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Implct="false" Intrnl_Id="153">
                                                             <Cond/>
                                                             <LocList>
-                                                                <Loc EndOffset="2362" SrcFileId="5" StartOffset="2166"/>
+                                                                <Loc EndOffset="2362" SrcFileId="6" StartOffset="2166"/>
                                                             </LocList>
-                                                            <StmntSeq Intrnl_Id="137">
+                                                            <StmntSeq Intrnl_Id="154">
                                                                 <LocList>
-                                                                    <Loc EndOffset="2259" SrcFileId="5" StartOffset="2184"/>
+                                                                    <Loc EndOffset="2259" SrcFileId="6" StartOffset="2184"/>
                                                                 </LocList>
-                                                                <BasicStmnt CovItemId="S20" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="138">
+                                                                <BasicStmnt CovItemId="S20" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="155">
                                                                     <LocList>
-                                                                        <Loc EndOffset="2259" SrcFileId="5" StartOffset="2184"/>
+                                                                        <Loc EndOffset="2259" SrcFileId="6" StartOffset="2184"/>
                                                                     </LocList>
                                                                 </BasicStmnt>
                                                             </StmntSeq>
                                                         </Branch>
-                                                        <Branch CovItemId="B11" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Implct="true" Intrnl_Id="139">
+                                                        <Branch CovItemId="B11" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Implct="true" Intrnl_Id="156">
                                                             <Cond/>
                                                             <LocList/>
-                                                            <StmntSeq Intrnl_Id="140">
+                                                            <StmntSeq Intrnl_Id="157">
                                                                 <LocList/>
                                                             </StmntSeq>
                                                         </Branch>
-                                                        <Keyword EndOffset="2147" SrcFileId="5" StartOffset="2145"/>
+                                                        <Keyword EndOffset="2147" SrcFileId="6" StartOffset="2145"/>
                                                         <LocList>
-                                                            <Loc EndOffset="2362" SrcFileId="5" StartOffset="2145"/>
+                                                            <Loc EndOffset="2362" SrcFileId="6" StartOffset="2145"/>
                                                         </LocList>
-                                                        <RootTerm CovItemId="C5" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="141">
-                                                            <OpTerm BooleanOpId="6" Intrnl_Id="142">
-                                                                <BasicBoolTerm Intrnl_Id="143">
+                                                        <RootTerm CovItemId="C5" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="158">
+                                                            <OpTerm BooleanOpId="7" Intrnl_Id="159">
+                                                                <BasicBoolTerm Intrnl_Id="160">
                                                                     <LocList>
-                                                                        <Loc EndOffset="2164" SrcFileId="5" StartOffset="2150"/>
+                                                                        <Loc EndOffset="2164" SrcFileId="6" StartOffset="2150"/>
                                                                     </LocList>
                                                                 </BasicBoolTerm>
                                                                 <LocList>
-                                                                    <Loc EndOffset="2150" SrcFileId="5" StartOffset="2149"/>
+                                                                    <Loc EndOffset="2150" SrcFileId="6" StartOffset="2149"/>
                                                                 </LocList>
                                                             </OpTerm>
                                                         </RootTerm>
                                                     </CondStmnt>
-                                                    <BasicStmnt CovItemId="S21" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="144">
+                                                    <BasicStmnt CovItemId="S21" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="161">
                                                         <LocList>
-                                                            <Loc EndOffset="2394" SrcFileId="5" StartOffset="2376"/>
+                                                            <Loc EndOffset="2394" SrcFileId="6" StartOffset="2376"/>
                                                         </LocList>
                                                     </BasicStmnt>
                                                 </StmntSeq>
                                             </Branch>
-                                            <Branch CovItemId="B12" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Implct="false" Intrnl_Id="145">
+                                            <Branch CovItemId="B12" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Implct="false" Intrnl_Id="162">
                                                 <Cond>
-                                                    <Loc EndOffset="2435" SrcFileId="5" StartOffset="2405"/>
+                                                    <Loc EndOffset="2435" SrcFileId="6" StartOffset="2405"/>
                                                 </Cond>
                                                 <LocList>
-                                                    <Loc EndOffset="2566" SrcFileId="5" StartOffset="2436"/>
+                                                    <Loc EndOffset="2566" SrcFileId="6" StartOffset="2436"/>
                                                 </LocList>
-                                                <StmntSeq Intrnl_Id="146">
+                                                <StmntSeq Intrnl_Id="163">
                                                     <LocList>
-                                                        <Loc EndOffset="2485" SrcFileId="5" StartOffset="2450"/>
+                                                        <Loc EndOffset="2485" SrcFileId="6" StartOffset="2450"/>
                                                     </LocList>
-                                                    <BasicStmnt CovItemId="S22" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="147">
+                                                    <BasicStmnt CovItemId="S22" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="164">
                                                         <LocList>
-                                                            <Loc EndOffset="2485" SrcFileId="5" StartOffset="2450"/>
+                                                            <Loc EndOffset="2485" SrcFileId="6" StartOffset="2450"/>
                                                         </LocList>
                                                     </BasicStmnt>
                                                 </StmntSeq>
                                             </Branch>
-                                            <Keyword EndOffset="1987" SrcFileId="5" StartOffset="1984"/>
+                                            <Keyword EndOffset="1987" SrcFileId="6" StartOffset="1984"/>
                                             <LocList>
-                                                <Loc EndOffset="2566" SrcFileId="5" StartOffset="1984"/>
+                                                <Loc EndOffset="2566" SrcFileId="6" StartOffset="1984"/>
                                             </LocList>
                                         </CondStmnt>
-                                        <CondStmnt CovItemId="S23" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="148">
-                                            <Branch CovItemId="B13" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Implct="false" Intrnl_Id="149">
+                                        <CondStmnt CovItemId="S23" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="165">
+                                            <Branch CovItemId="B13" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Implct="false" Intrnl_Id="166">
                                                 <Cond/>
                                                 <LocList>
-                                                    <Loc EndOffset="2661" SrcFileId="5" StartOffset="2609"/>
+                                                    <Loc EndOffset="2661" SrcFileId="6" StartOffset="2609"/>
                                                 </LocList>
-                                                <StmntSeq Intrnl_Id="150">
+                                                <StmntSeq Intrnl_Id="167">
                                                     <LocList>
-                                                        <Loc EndOffset="2647" SrcFileId="5" StartOffset="2627"/>
+                                                        <Loc EndOffset="2647" SrcFileId="6" StartOffset="2627"/>
                                                     </LocList>
-                                                    <BasicStmnt CovItemId="S24" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="151">
+                                                    <BasicStmnt CovItemId="S24" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="168">
                                                         <LocList>
-                                                            <Loc EndOffset="2647" SrcFileId="5" StartOffset="2627"/>
+                                                            <Loc EndOffset="2647" SrcFileId="6" StartOffset="2627"/>
                                                         </LocList>
                                                     </BasicStmnt>
                                                 </StmntSeq>
                                             </Branch>
-                                            <Branch CovItemId="B14" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Implct="true" Intrnl_Id="152">
+                                            <Branch CovItemId="B14" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Implct="true" Intrnl_Id="169">
                                                 <Cond/>
                                                 <LocList/>
-                                                <StmntSeq Intrnl_Id="153">
+                                                <StmntSeq Intrnl_Id="170">
                                                     <LocList/>
                                                 </StmntSeq>
                                             </Branch>
-                                            <Keyword EndOffset="2591" SrcFileId="5" StartOffset="2589"/>
+                                            <Keyword EndOffset="2591" SrcFileId="6" StartOffset="2589"/>
                                             <LocList>
-                                                <Loc EndOffset="2661" SrcFileId="5" StartOffset="2589"/>
+                                                <Loc EndOffset="2661" SrcFileId="6" StartOffset="2589"/>
                                             </LocList>
-                                            <RootTerm CovItemId="C6" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="154">
-                                                <BasicBoolTerm Intrnl_Id="155">
+                                            <RootTerm CovItemId="C6" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="171">
+                                                <BasicBoolTerm Intrnl_Id="172">
                                                     <LocList>
-                                                        <Loc EndOffset="2607" SrcFileId="5" StartOffset="2593"/>
+                                                        <Loc EndOffset="2607" SrcFileId="6" StartOffset="2593"/>
                                                     </LocList>
                                                 </BasicBoolTerm>
                                             </RootTerm>
                                         </CondStmnt>
                                     </StmntSeq>
                                 </HierarchyLvl>
-                                <HierarchyLvl HierarchyLvlId="23" HierarchyLvlTypeId="8" Intrnl_Id="156" Name="getOriginalUrl">
+                                <HierarchyLvl HierarchyLvlId="25" HierarchyLvlTypeId="9" Intrnl_Id="173" Name="getOriginalUrl">
                                     <Header>
-                                        <Loc EndOffset="2739" SrcFileId="5" StartOffset="2683"/>
+                                        <Loc EndOffset="2739" SrcFileId="6" StartOffset="2683"/>
                                     </Header>
                                     <LocList>
-                                        <Loc EndOffset="2822" SrcFileId="5" StartOffset="2683"/>
+                                        <Loc EndOffset="2822" SrcFileId="6" StartOffset="2683"/>
                                     </LocList>
                                 </HierarchyLvl>
-                                <HierarchyLvl HierarchyLvlId="24" HierarchyLvlTypeId="8" Intrnl_Id="157" Name="getAllUrls">
+                                <HierarchyLvl HierarchyLvlId="26" HierarchyLvlTypeId="9" Intrnl_Id="174" Name="getAllUrls">
                                     <Header>
-                                        <Loc EndOffset="2867" SrcFileId="5" StartOffset="2828"/>
+                                        <Loc EndOffset="2867" SrcFileId="6" StartOffset="2828"/>
                                     </Header>
                                     <LocList>
-                                        <Loc EndOffset="2906" SrcFileId="5" StartOffset="2828"/>
+                                        <Loc EndOffset="2906" SrcFileId="6" StartOffset="2828"/>
                                     </LocList>
                                 </HierarchyLvl>
-                                <HierarchyLvl HierarchyLvlId="25" HierarchyLvlTypeId="8" Intrnl_Id="158" Name="generateUniqueShortCode">
+                                <HierarchyLvl HierarchyLvlId="27" HierarchyLvlTypeId="9" Intrnl_Id="175" Name="generateUniqueShortCode">
                                     <Header>
-                                        <Loc EndOffset="2952" SrcFileId="5" StartOffset="2912"/>
+                                        <Loc EndOffset="2952" SrcFileId="6" StartOffset="2912"/>
                                     </Header>
                                     <LocList>
-                                        <Loc EndOffset="3147" SrcFileId="5" StartOffset="2912"/>
+                                        <Loc EndOffset="3147" SrcFileId="6" StartOffset="2912"/>
                                     </LocList>
-                                    <StmntSeq Intrnl_Id="159">
+                                    <StmntSeq Intrnl_Id="176">
                                         <LocList>
-                                            <Loc EndOffset="3115" SrcFileId="5" StartOffset="2989"/>
+                                            <Loc EndOffset="3115" SrcFileId="6" StartOffset="2989"/>
                                         </LocList>
-                                        <LoopStmnt CovItemId="S25" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="160" MltplExecId="L1-2" MltplExecPrefix="com.example.urlshortener.service.UrlService.java" NvrExecId="L1-0" NvrExecPrefix="com.example.urlshortener.service.UrlService.java" OnceExecutedId="L1-1" OnceExecutedPrefix="com.example.urlshortener.service.UrlService.java" OptBodyExec="false">
-                                            <StmntSeq Intrnl_Id="161">
+                                        <LoopStmnt CovItemId="S25" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="177" MltplExecId="L1-2" MltplExecPrefix="com.example.urlshortener.service.UrlService.java" NvrExecId="L1-0" NvrExecPrefix="com.example.urlshortener.service.UrlService.java" OnceExecutedId="L1-1" OnceExecutedPrefix="com.example.urlshortener.service.UrlService.java" OptBodyExec="false">
+                                            <StmntSeq Intrnl_Id="178">
                                                 <LocList>
-                                                    <Loc EndOffset="3058" SrcFileId="5" StartOffset="3006"/>
+                                                    <Loc EndOffset="3058" SrcFileId="6" StartOffset="3006"/>
                                                 </LocList>
-                                                <BasicStmnt CovItemId="S26" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="162">
+                                                <BasicStmnt CovItemId="S26" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="179">
                                                     <LocList>
-                                                        <Loc EndOffset="3058" SrcFileId="5" StartOffset="3006"/>
+                                                        <Loc EndOffset="3058" SrcFileId="6" StartOffset="3006"/>
                                                     </LocList>
                                                 </BasicStmnt>
                                             </StmntSeq>
-                                            <Keyword EndOffset="2991" SrcFileId="5" StartOffset="2989"/>
+                                            <Keyword EndOffset="2991" SrcFileId="6" StartOffset="2989"/>
                                             <LocList>
-                                                <Loc EndOffset="3115" SrcFileId="5" StartOffset="2989"/>
+                                                <Loc EndOffset="3115" SrcFileId="6" StartOffset="2989"/>
                                             </LocList>
-                                            <RootTerm CovItemId="C7" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="163">
-                                                <BasicBoolTerm Intrnl_Id="164">
+                                            <RootTerm CovItemId="C7" CovItemPrefix="com.example.urlshortener.service.UrlService.java" Intrnl_Id="180">
+                                                <BasicBoolTerm Intrnl_Id="181">
                                                     <LocList>
-                                                        <Loc EndOffset="3113" SrcFileId="5" StartOffset="3076"/>
+                                                        <Loc EndOffset="3113" SrcFileId="6" StartOffset="3076"/>
                                                     </LocList>
                                                 </BasicBoolTerm>
                                             </RootTerm>
@@ -867,27 +964,27 @@
                                 </HierarchyLvl>
                             </HierarchyLvl>
                         </HierarchyLvl>
-                        <HierarchyLvl HierarchyLvlId="19" HierarchyLvlTypeId="9" Intrnl_Id="165" Name="UrlshortenerApplication">
+                        <HierarchyLvl HierarchyLvlId="21" HierarchyLvlTypeId="10" Intrnl_Id="182" Name="UrlshortenerApplication">
                             <Header>
-                                <Loc EndOffset="215" SrcFileId="4" StartOffset="156"/>
+                                <Loc EndOffset="215" SrcFileId="5" StartOffset="156"/>
                             </Header>
                             <LocList>
-                                <Loc EndOffset="338" SrcFileId="4" StartOffset="156"/>
+                                <Loc EndOffset="338" SrcFileId="5" StartOffset="156"/>
                             </LocList>
-                            <HierarchyLvl HierarchyLvlId="18" HierarchyLvlTypeId="8" Intrnl_Id="166" Name="main">
+                            <HierarchyLvl HierarchyLvlId="20" HierarchyLvlTypeId="9" Intrnl_Id="183" Name="main">
                                 <Header>
-                                    <Loc EndOffset="260" SrcFileId="4" StartOffset="222"/>
+                                    <Loc EndOffset="260" SrcFileId="5" StartOffset="222"/>
                                 </Header>
                                 <LocList>
-                                    <Loc EndOffset="336" SrcFileId="4" StartOffset="222"/>
+                                    <Loc EndOffset="336" SrcFileId="5" StartOffset="222"/>
                                 </LocList>
-                                <StmntSeq Intrnl_Id="167">
+                                <StmntSeq Intrnl_Id="184">
                                     <LocList>
-                                        <Loc EndOffset="330" SrcFileId="4" StartOffset="271"/>
+                                        <Loc EndOffset="330" SrcFileId="5" StartOffset="271"/>
                                     </LocList>
-                                    <BasicStmnt CovItemId="S1" CovItemPrefix="com.example.urlshortener.UrlshortenerApplication.java" Intrnl_Id="168">
+                                    <BasicStmnt CovItemId="S1" CovItemPrefix="com.example.urlshortener.UrlshortenerApplication.java" Intrnl_Id="185">
                                         <LocList>
-                                            <Loc EndOffset="330" SrcFileId="4" StartOffset="271"/>
+                                            <Loc EndOffset="330" SrcFileId="5" StartOffset="271"/>
                                         </LocList>
                                     </BasicStmnt>
                                 </StmntSeq>
