@@ -13,6 +13,7 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+
 @RestController
 @CrossOrigin(origins = "*") // Allow any frontend to connect
 public class UrlController {
@@ -29,10 +30,10 @@ public class UrlController {
         try {
             String shortCode = urlService.shortenUrl(request.getUrl());
             System.out.println("Successfully shortened " + request.getUrl() + " to " + shortCode);
-            return ResponseEntity.ok(Collections.singletonMap("shortCode", shortCode));
+            return new ResponseEntity<Map<String, String>>(Collections.singletonMap("shortCode", shortCode), HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             System.err.println("Error shortening URL " + request.getUrl() + ": " + e.getMessage());
-            return ResponseEntity.badRequest().body(Collections.singletonMap("error", e.getMessage()));
+            return new ResponseEntity<Map<String, String>>(Collections.singletonMap("error", e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -45,26 +46,23 @@ public class UrlController {
         Map<String, String> allUrls = urlService.getAllUrls();
         int totalCount = allUrls.size();
         UrlsResponse response = new UrlsResponse(allUrls, totalCount);
-        return ResponseEntity.ok(response);
+        return new ResponseEntity<UrlsResponse>(response, HttpStatus.OK);
     }
 
     @GetMapping("/{code}")
     public ResponseEntity<Void> redirectToOriginalUrl(@PathVariable String code) {
         System.out.println("Received request to redirect for code: " + code);
 
-        // Get the Optional result from the service
         Optional<String> originalUrlOptional = urlService.getOriginalUrl(code);
 
-        // Check if a URL is present in the Optional
         if (originalUrlOptional.isPresent()) {
             String url = originalUrlOptional.get();
             HttpHeaders headers = new HttpHeaders();
             headers.setLocation(URI.create(url));
             System.out.println("Redirecting " + code + " to " + url);
-            return new ResponseEntity<>(headers, HttpStatus.FOUND);
+            return new ResponseEntity<Void>(headers, HttpStatus.FOUND);
         } else {
-            // If the Optional is empty, return a 404 Not Found response
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
         }
     }
 }
