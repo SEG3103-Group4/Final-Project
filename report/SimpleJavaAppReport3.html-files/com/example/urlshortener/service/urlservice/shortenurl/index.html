@@ -1,0 +1,291 @@
+
+            <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>shortenUrl - TestSession3+4 - CodeCover Report</title>
+    <link rel="stylesheet" type="text/css" href="../../../../../../style.css">
+</head>
+<body>
+    <div class="headline">
+        Coverage Report
+    </div>
+    <div class="session">
+        TestSession3+4
+    </div>
+    <div class="sessionDate">
+        measured on July 13, 2025, 5:39:28 PM EDT
+    </div>
+    <div class="linkToTop">
+          <a href="../../../../../../../SimpleJavaAppReport3.html">
+              up to the title page
+          </a>
+    </div>
+    <div class="ancestors">
+    <a href="../../../../../index.html">
+        com</a>
+    .
+    <a href="../../../../index.html">
+        example</a>
+    .
+    <a href="../../../index.html">
+        urlshortener</a>
+    .
+    <a href="../../index.html">
+        service</a>
+    .
+    <a href="../index.html">
+        UrlService</a>
+    .
+    shortenUrl
+    </div><div class="methodInfo">
+    <table class="methodInfo">
+    <thead class="methodInfo">
+        <tr class="methodInfo">
+            <th class="methodInfo firstcolumn"></th>
+            <th class="methodInfo" colspan="3">Statement Coverage</th>
+            <th class="methodInfo" colspan="3">Branch Coverage</th>
+            <th class="methodInfo" colspan="3">Loop Coverage</th>
+            <th class="methodInfo" colspan="3">Strict Condition Coverage</th>
+        </tr>
+    </thead>
+    <tbody class="methodInfo">
+        <tr class="methodInfo">
+            <td class="methodInfo firstcolumn">
+                    public String shortenUrl(String longUrl)
+            </td>  
+                                    <td class="methodInfo">
+                        4&nbsp;/&nbsp;4
+                </td>
+                <td class="methodInfo">
+                        100&nbsp;%
+                </td>
+                <td class="methodInfo coverage">
+                        <div class="red"><div class="green" style="width:100%"></div></div>
+                </td>   
+                                                <td class="methodInfo">
+                        4&nbsp;/&nbsp;4
+                </td>
+                <td class="methodInfo">
+                        100&nbsp;%
+                </td>
+                <td class="methodInfo coverage">
+                        <div class="red"><div class="green" style="width:100%"></div></div>
+                </td>   
+                                            <td class="methodInfo">
+                        0&nbsp;/&nbsp;0
+                </td>
+                <td class="methodInfo">
+                        ---
+                </td>
+                <td class="methodInfo coverage">
+                        <div class="grey"></div>
+                </td>  
+                                                <td class="methodInfo">
+                        2&nbsp;/&nbsp;2
+                </td>
+                <td class="methodInfo">
+                        100&nbsp;%
+                </td>
+                <td class="methodInfo coverage">
+                        <div class="red"><div class="green" style="width:100%"></div></div>
+                </td>   
+                        </tr>
+    </tbody>
+    </table></div>
+    <div class="code">
+    <table class="code">
+        <thead class="code">
+        <tr class="code">
+                        <th class="code" colspan="3">UrlService.java</th>
+                </tr>
+        </thead>
+        <tbody class="code">
+                      <tr class="code" id="L40">
+             <td class="code lineNumber">
+                  <a href="#L40">40</a>
+                       </td>
+              <td class="code executions">
+                       &nbsp;
+              </td>
+              <td class="code text">
+                  &nbsp;&nbsp;&nbsp; public String shortenUrl(String longUrl) {
+              </td>
+          </tr>
+                      <tr class="code" id="L41">
+             <td class="code lineNumber">
+                  <a href="#L41">41</a>
+                       </td>
+              <td class="code executions">
+                       &nbsp;
+              </td>
+              <td class="code text">
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="covered fullyCovered Branch_Coverage">if</span> (!<span class="covered fullyCovered Strict_Condition_Coverage">urlValidator.isValid(longUrl)</span>) {
+              </td>
+          </tr>
+                      <tr class="code" id="L42">
+             <td class="code lineNumber">
+                  <a href="#L42">42</a>
+                       </td>
+              <td class="code executions">
+                       &nbsp;
+              </td>
+              <td class="code text">
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; throw new IllegalArgumentException(&quot;Invalid URL provided: &quot; + longUrl);
+              </td>
+          </tr>
+                      <tr class="code" id="L43">
+             <td class="code lineNumber">
+                  <a href="#L43">43</a>
+                       </td>
+              <td class="code executions">
+                       &nbsp;
+              </td>
+              <td class="code text">
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+              </td>
+          </tr>
+                      <tr class="code" id="L44">
+             <td class="code lineNumber">
+                  <a href="#L44">44</a>
+                       </td>
+              <td class="code executions">
+                       &nbsp;
+              </td>
+              <td class="code text">
+                  
+              </td>
+          </tr>
+                      <tr class="code" id="L45">
+             <td class="code lineNumber">
+                  <a href="#L45">45</a>
+                       </td>
+              <td class="code executions">
+                       &nbsp;
+              </td>
+              <td class="code text">
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="covered fullyCovered Statement_Coverage">applyRateLimiting();</span>
+              </td>
+          </tr>
+                      <tr class="code" id="L46">
+             <td class="code lineNumber">
+                  <a href="#L46">46</a>
+                       </td>
+              <td class="code executions">
+                       &nbsp;
+              </td>
+              <td class="code text">
+                  
+              </td>
+          </tr>
+                      <tr class="code" id="L47">
+             <td class="code lineNumber">
+                  <a href="#L47">47</a>
+                       </td>
+              <td class="code executions">
+                       &nbsp;
+              </td>
+              <td class="code text">
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="covered fullyCovered Branch_Coverage">if</span> (<span class="covered fullyCovered Strict_Condition_Coverage">longToShortUrl.containsKey(longUrl)</span>) {
+              </td>
+          </tr>
+                      <tr class="code" id="L48">
+             <td class="code lineNumber">
+                  <a href="#L48">48</a>
+                       </td>
+              <td class="code executions">
+                       &nbsp;
+              </td>
+              <td class="code text">
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return longToShortUrl.get(longUrl);
+              </td>
+          </tr>
+                      <tr class="code" id="L49">
+             <td class="code lineNumber">
+                  <a href="#L49">49</a>
+                       </td>
+              <td class="code executions">
+                       &nbsp;
+              </td>
+              <td class="code text">
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+              </td>
+          </tr>
+                      <tr class="code" id="L50">
+             <td class="code lineNumber">
+                  <a href="#L50">50</a>
+                       </td>
+              <td class="code executions">
+                       &nbsp;
+              </td>
+              <td class="code text">
+                  
+              </td>
+          </tr>
+                      <tr class="code" id="L51">
+             <td class="code lineNumber">
+                  <a href="#L51">51</a>
+                       </td>
+              <td class="code executions">
+                       &nbsp;
+              </td>
+              <td class="code text">
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="covered fullyCovered Statement_Coverage">String shortCode = generateUniqueShortCode();</span>
+              </td>
+          </tr>
+                      <tr class="code" id="L52">
+             <td class="code lineNumber">
+                  <a href="#L52">52</a>
+                       </td>
+              <td class="code executions">
+                       &nbsp;
+              </td>
+              <td class="code text">
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="covered fullyCovered Statement_Coverage">shortToLongUrl.put(shortCode, longUrl);</span>
+              </td>
+          </tr>
+                      <tr class="code" id="L53">
+             <td class="code lineNumber">
+                  <a href="#L53">53</a>
+                       </td>
+              <td class="code executions">
+                       &nbsp;
+              </td>
+              <td class="code text">
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="covered fullyCovered Statement_Coverage">longToShortUrl.put(longUrl, shortCode);</span>
+              </td>
+          </tr>
+                      <tr class="code" id="L54">
+             <td class="code lineNumber">
+                  <a href="#L54">54</a>
+                       </td>
+              <td class="code executions">
+                       &nbsp;
+              </td>
+              <td class="code text">
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return shortCode;
+              </td>
+          </tr>
+                      <tr class="code" id="L55">
+             <td class="code lineNumber">
+                  <a href="#L55">55</a>
+                       </td>
+              <td class="code executions">
+                       &nbsp;
+              </td>
+              <td class="code text">
+                  &nbsp;&nbsp;&nbsp; }
+              </td>
+          </tr>
+            </tbody>
+    </table></div>
+        <div class="creationNote">
+        created on July 13, 2025, 5:39:51 PM EDT with
+        <a href="http://www.codecover.org">
+            CodeCover
+        </a>
+    </div>    
+</body>
+</html>
+        
