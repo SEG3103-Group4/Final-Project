@@ -15,8 +15,8 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class UrlService {
 
-    private final Map<String, String> shortToLongUrl = new ConcurrentHashMap<>();
-    private final Map<String, String> longToShortUrl = new ConcurrentHashMap<>();
+    private final Map<String, String> shortToLongUrl = new ConcurrentHashMap<String, String>();
+    private final Map<String, String> longToShortUrl = new ConcurrentHashMap<String, String>();
     private final UrlValidator urlValidator = new UrlValidator(new String[]{"http", "https"});
 
     @Value("${rate-limiting.enabled:false}")
@@ -30,8 +30,7 @@ public class UrlService {
     @PostConstruct
     public void init() {
         if (rateLimitingEnabled) {
-            // Only create the semaphore if the feature is enabled
-            this.semaphore = new Semaphore(maxPermits, true); // Use true for fairness
+            this.semaphore = new Semaphore(maxPermits, true);
             System.out.println("✅ Rate limiting ENABLED with " + maxPermits + " permits.");
         } else {
             System.out.println("❌ Rate limiting DISABLED.");
@@ -43,8 +42,6 @@ public class UrlService {
             throw new IllegalArgumentException("Invalid URL provided: " + longUrl);
         }
 
-        // The rate-limiting logic is now encapsulated in its own method for clarity.
-        // This method will only have an effect if rateLimitingEnabled is true.
         applyRateLimiting();
 
         if (longToShortUrl.containsKey(longUrl)) {
@@ -57,28 +54,20 @@ public class UrlService {
         return shortCode;
     }
 
-    /**
-     * Helper method to apply the rate-limiting logic.
-     * It checks the 'rateLimitingEnabled' flag internally.
-     */
     private void applyRateLimiting() {
-        // This entire block of logic is now self-contained.
-        // If the flag is false, this method does nothing.
         if (!rateLimitingEnabled) {
-            return; // Exit immediately if not enabled
+            return;
         }
 
         boolean permitAcquired = false;
         try {
             System.out.println("Applying rate limit delay...");
-            // Try to acquire a permit, waiting a maximum of 500ms
             permitAcquired = semaphore.tryAcquire(500, TimeUnit.MILLISECONDS);
             if (!permitAcquired) {
                 System.err.println("COULD NOT ACQUIRE SEMAPHORE PERMIT - SERVER TOO BUSY");
                 throw new RuntimeException("Server is too busy to handle the request.");
             }
 
-            // Simulate a slow operation (e.g., a slow database call)
             Thread.sleep(150);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -91,7 +80,7 @@ public class UrlService {
     }
 
     public Optional<String> getOriginalUrl(String shortCode) {
-        return Optional.ofNullable(shortToLongUrl.get(shortCode));
+        return Optional.<String>ofNullable(shortToLongUrl.get(shortCode));
     }
 
     public Map<String, String> getAllUrls() {
