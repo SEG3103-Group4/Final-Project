@@ -995,4 +995,182 @@
             </HierarchyLvl>
         </HierarchyLvl>
     </MASTRoot>
+    <TestSession Comment="The first test session" Date="1752372838128" Name="TestSession1">
+        <TestCase Comment="This is a test case containing all coverage results cause no startTestCase methods where captured." Date="1752372067517" Name="UNNAMED TESTCASE">
+            <CovList>
+                <CovPrefix CovItemPrefix="com.example.urlshortener.controller.UrlController.java">
+                    <Cov CovItemId="B1" Value="1"/>
+                    <Cov CovItemId="B3" Value="1"/>
+                    <Cov CovItemId="S1" Value="1"/>
+                    <Cov CovItemId="S10" Value="1"/>
+                    <Cov CovItemId="S11" Value="1"/>
+                    <Cov CovItemId="S12" Value="1"/>
+                    <Cov CovItemId="S13" Value="1"/>
+                    <Cov CovItemId="S14" Value="1"/>
+                    <Cov CovItemId="S15" Value="1"/>
+                    <Cov CovItemId="S16" Value="1"/>
+                    <Cov CovItemId="S2" Value="1"/>
+                    <Cov CovItemId="S3" Value="1"/>
+                    <Cov CovItemId="S4" Value="1"/>
+                    <Cov CovItemId="S5" Value="1"/>
+                    <Cov CovItemId="S7" Value="1"/>
+                    <Cov CovItemId="S8" Value="1"/>
+                    <Cov CovItemId="S9" Value="1"/>
+                </CovPrefix>
+                <CovPrefix CovItemPrefix="com.example.urlshortener.controller.codecovertests.urlControllerTester.java">
+                    <Cov CovItemId="S1" Value="1"/>
+                    <Cov CovItemId="S10" Value="1"/>
+                    <Cov CovItemId="S11" Value="1"/>
+                    <Cov CovItemId="S12" Value="1"/>
+                    <Cov CovItemId="S2" Value="1"/>
+                    <Cov CovItemId="S3" Value="1"/>
+                    <Cov CovItemId="S4" Value="1"/>
+                    <Cov CovItemId="S5" Value="1"/>
+                    <Cov CovItemId="S6" Value="1"/>
+                    <Cov CovItemId="S7" Value="1"/>
+                    <Cov CovItemId="S8" Value="1"/>
+                    <Cov CovItemId="S9" Value="1"/>
+                </CovPrefix>
+                <CovPrefix CovItemPrefix="com.example.urlshortener.model.ShortenRequest.java">
+                    <Cov CovItemId="S1" Value="1"/>
+                    <Cov CovItemId="S3" Value="1"/>
+                </CovPrefix>
+                <CovPrefix CovItemPrefix="com.example.urlshortener.model.UrlsResponse.java">
+                    <Cov CovItemId="S3" Value="1"/>
+                    <Cov CovItemId="S4" Value="1"/>
+                </CovPrefix>
+                <CovPrefix CovItemPrefix="com.example.urlshortener.service.UrlService.java">
+                    <Cov CovItemId="B4" Value="1"/>
+                    <Cov CovItemId="B6" Value="1"/>
+                    <Cov CovItemId="B7" Value="1"/>
+                    <Cov CovItemId="L1-1" Value="1"/>
+                    <Cov CovItemId="S1" Value="1"/>
+                    <Cov CovItemId="S10" Value="1"/>
+                    <Cov CovItemId="S11" Value="1"/>
+                    <Cov CovItemId="S12" Value="1"/>
+                    <Cov CovItemId="S13" Value="1"/>
+                    <Cov CovItemId="S14" Value="1"/>
+                    <Cov CovItemId="S2" Value="1"/>
+                    <Cov CovItemId="S25" Value="1"/>
+                    <Cov CovItemId="S26" Value="1"/>
+                    <Cov CovItemId="S3" Value="1"/>
+                    <Cov CovItemId="S8" Value="1"/>
+                    <Cov CovItemId="S9" Value="1"/>
+                </CovPrefix>
+            </CovList>
+            <AssgnmntList>
+                <AssgnmntPrefix RootTermCovItemPrefix="com.example.urlshortener.controller.UrlController.java">
+                    <AssgnmntListEntry Length="1" RootTermCovItemId="C1">
+                        <MapEntry BoolAssgnmnt="1" Value="1"/>
+                    </AssgnmntListEntry>
+                </AssgnmntPrefix>
+                <AssgnmntPrefix RootTermCovItemPrefix="com.example.urlshortener.service.UrlService.java">
+                    <AssgnmntListEntry Length="1" RootTermCovItemId="C2">
+                        <MapEntry BoolAssgnmnt="1" Value="1"/>
+                    </AssgnmntListEntry>
+                    <AssgnmntListEntry Length="1" RootTermCovItemId="C3">
+                        <MapEntry BoolAssgnmnt="0" Value="1"/>
+                    </AssgnmntListEntry>
+                    <AssgnmntListEntry Length="1" RootTermCovItemId="C4">
+                        <MapEntry BoolAssgnmnt="0" Value="1"/>
+                    </AssgnmntListEntry>
+                    <AssgnmntListEntry Length="1" RootTermCovItemId="C7">
+                        <MapEntry BoolAssgnmnt="0" Value="1"/>
+                    </AssgnmntListEntry>
+                </AssgnmntPrefix>
+            </AssgnmntList>
+            <ObjMetaDataList/>
+            <MetaDataList/>
+        </TestCase>
+        <MetaDataList/>
+    </TestSession>
+    <TestSession Comment="The first test session" Date="1752373057598" Name="TestSession1 (1)">
+        <TestCase Comment="This is a test case containing all coverage results cause no startTestCase methods where captured." Date="1752372067517" Name="UNNAMED TESTCASE">
+            <CovList>
+                <CovPrefix CovItemPrefix="com.example.urlshortener.controller.UrlController.java">
+                    <Cov CovItemId="B1" Value="1"/>
+                    <Cov CovItemId="B3" Value="1"/>
+                    <Cov CovItemId="S1" Value="1"/>
+                    <Cov CovItemId="S10" Value="1"/>
+                    <Cov CovItemId="S11" Value="1"/>
+                    <Cov CovItemId="S12" Value="1"/>
+                    <Cov CovItemId="S13" Value="1"/>
+                    <Cov CovItemId="S14" Value="1"/>
+                    <Cov CovItemId="S15" Value="1"/>
+                    <Cov CovItemId="S16" Value="1"/>
+                    <Cov CovItemId="S2" Value="1"/>
+                    <Cov CovItemId="S3" Value="1"/>
+                    <Cov CovItemId="S4" Value="1"/>
+                    <Cov CovItemId="S5" Value="1"/>
+                    <Cov CovItemId="S7" Value="1"/>
+                    <Cov CovItemId="S8" Value="1"/>
+                    <Cov CovItemId="S9" Value="1"/>
+                </CovPrefix>
+                <CovPrefix CovItemPrefix="com.example.urlshortener.controller.codecovertests.urlControllerTester.java">
+                    <Cov CovItemId="S1" Value="1"/>
+                    <Cov CovItemId="S10" Value="1"/>
+                    <Cov CovItemId="S11" Value="1"/>
+                    <Cov CovItemId="S12" Value="1"/>
+                    <Cov CovItemId="S2" Value="1"/>
+                    <Cov CovItemId="S3" Value="1"/>
+                    <Cov CovItemId="S4" Value="1"/>
+                    <Cov CovItemId="S5" Value="1"/>
+                    <Cov CovItemId="S6" Value="1"/>
+                    <Cov CovItemId="S7" Value="1"/>
+                    <Cov CovItemId="S8" Value="1"/>
+                    <Cov CovItemId="S9" Value="1"/>
+                </CovPrefix>
+                <CovPrefix CovItemPrefix="com.example.urlshortener.model.ShortenRequest.java">
+                    <Cov CovItemId="S1" Value="1"/>
+                    <Cov CovItemId="S3" Value="1"/>
+                </CovPrefix>
+                <CovPrefix CovItemPrefix="com.example.urlshortener.model.UrlsResponse.java">
+                    <Cov CovItemId="S3" Value="1"/>
+                    <Cov CovItemId="S4" Value="1"/>
+                </CovPrefix>
+                <CovPrefix CovItemPrefix="com.example.urlshortener.service.UrlService.java">
+                    <Cov CovItemId="B4" Value="1"/>
+                    <Cov CovItemId="B6" Value="1"/>
+                    <Cov CovItemId="B7" Value="1"/>
+                    <Cov CovItemId="L1-1" Value="1"/>
+                    <Cov CovItemId="S1" Value="1"/>
+                    <Cov CovItemId="S10" Value="1"/>
+                    <Cov CovItemId="S11" Value="1"/>
+                    <Cov CovItemId="S12" Value="1"/>
+                    <Cov CovItemId="S13" Value="1"/>
+                    <Cov CovItemId="S14" Value="1"/>
+                    <Cov CovItemId="S2" Value="1"/>
+                    <Cov CovItemId="S25" Value="1"/>
+                    <Cov CovItemId="S26" Value="1"/>
+                    <Cov CovItemId="S3" Value="1"/>
+                    <Cov CovItemId="S8" Value="1"/>
+                    <Cov CovItemId="S9" Value="1"/>
+                </CovPrefix>
+            </CovList>
+            <AssgnmntList>
+                <AssgnmntPrefix RootTermCovItemPrefix="com.example.urlshortener.controller.UrlController.java">
+                    <AssgnmntListEntry Length="1" RootTermCovItemId="C1">
+                        <MapEntry BoolAssgnmnt="1" Value="1"/>
+                    </AssgnmntListEntry>
+                </AssgnmntPrefix>
+                <AssgnmntPrefix RootTermCovItemPrefix="com.example.urlshortener.service.UrlService.java">
+                    <AssgnmntListEntry Length="1" RootTermCovItemId="C2">
+                        <MapEntry BoolAssgnmnt="1" Value="1"/>
+                    </AssgnmntListEntry>
+                    <AssgnmntListEntry Length="1" RootTermCovItemId="C3">
+                        <MapEntry BoolAssgnmnt="0" Value="1"/>
+                    </AssgnmntListEntry>
+                    <AssgnmntListEntry Length="1" RootTermCovItemId="C4">
+                        <MapEntry BoolAssgnmnt="0" Value="1"/>
+                    </AssgnmntListEntry>
+                    <AssgnmntListEntry Length="1" RootTermCovItemId="C7">
+                        <MapEntry BoolAssgnmnt="0" Value="1"/>
+                    </AssgnmntListEntry>
+                </AssgnmntPrefix>
+            </AssgnmntList>
+            <ObjMetaDataList/>
+            <MetaDataList/>
+        </TestCase>
+        <MetaDataList/>
+    </TestSession>
 </TestSessionContainer>

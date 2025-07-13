@@ -1,0 +1,81 @@
+// Charset: UTF-8
+// ///////////////////////////////
+// 
+// Start Session
+// 
+// 12.07.2025 22:01:07.517
+// 
+// ///////////////////////////////
+// 12.07.2025 22:01:07.517
+TEST_SESSION_CONTAINER "19466ebd-6dec-4703-8e9f-67f2dcbb430c"
+START_TEST_CASE "UNNAMED TESTCASE" 1752372067517 "This is a test case containing all coverage results cause no startTestCase methods where captured."
+START_SECTION "com.example.urlshortener.controller.UrlController.java"
+S1 1
+S2 1
+S3 1
+S4 1
+S5 1
+S7 1
+S8 1
+S9 1
+S10 1
+S11 1
+S12 1
+S13 1
+S14 1
+S15 1
+S16 1
+B1 1
+B3 1
+C1-11 1
+START_SECTION "com.example.urlshortener.controller.codecovertests.urlControllerTester.java"
+S1 1
+S2 1
+S3 1
+S4 1
+S5 1
+S6 1
+S7 1
+S8 1
+S9 1
+S10 1
+S11 1
+S12 1
+START_SECTION "com.example.urlshortener.model.ShortenRequest.java"
+S1 1
+S3 1
+START_SECTION "com.example.urlshortener.model.UrlsResponse.java"
+S3 1
+S4 1
+START_SECTION "com.example.urlshortener.service.UrlService.java"
+S1 1
+S2 1
+S3 1
+S8 1
+S9 1
+S10 1
+S11 1
+S12 1
+S13 1
+S14 1
+S25 1
+S26 1
+B4 1
+B6 1
+B7 1
+C2-11 1
+C3-10 1
+C4-10 1
+C7-10 1
+L1-1 1
+// 12.07.2025 22:01:07.602
+// 00:00.085
+END_TEST_CASE "UNNAMED TESTCASE" 1752372067602
+// ///////////////////////////////
+// 
+// End Session
+// 
+// 12.07.2025 22:01:07.602
+// 00:00.085
+// 
+// ///////////////////////////////
