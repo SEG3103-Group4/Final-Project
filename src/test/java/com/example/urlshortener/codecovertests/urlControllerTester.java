@@ -19,6 +19,7 @@ public class urlControllerTester {
         UrlService urlService = new UrlService();
 
         UrlController controller = new UrlController(urlService);
+        String baseUrl = "local host server";
 
         ShortenRequest request = new ShortenRequest();
         request.setUrl("https://en.wikipedia.org/wiki/Code_coverage");
@@ -28,6 +29,8 @@ public class urlControllerTester {
         // getting the shortcode
         String shortCode = response.getBody().get("shortCode");
         System.out.println("Generated shortCode: " + shortCode);
+        String fullShortenedUrl = baseUrl + shortCode;
+        System.out.println("Full shortened URL: " + fullShortenedUrl);
 
         // test getAllUrls
         ResponseEntity<UrlsResponse> allUrlsResponse = controller.getAllUrls();
