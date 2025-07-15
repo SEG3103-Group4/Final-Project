@@ -1,0 +1,248 @@
+
+            <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>shortenUrl - TestSession5+6+7 - CodeCover Report</title>
+    <link rel="stylesheet" type="text/css" href="../../../../../../style.css">
+</head>
+<body>
+    <div class="headline">
+        Coverage Report
+    </div>
+    <div class="session">
+        TestSession5+6+7
+    </div>
+    <div class="sessionDate">
+        measured on July 14, 2025, 9:19:19 PM EDT
+    </div>
+    <div class="linkToTop">
+          <a href="../../../../../../../SimpleJavaAppReport4.html">
+              up to the title page
+          </a>
+    </div>
+    <div class="ancestors">
+    <a href="../../../../../index.html">
+        com</a>
+    .
+    <a href="../../../../index.html">
+        example</a>
+    .
+    <a href="../../../index.html">
+        urlshortener</a>
+    .
+    <a href="../../index.html">
+        controller</a>
+    .
+    <a href="../index.html">
+        UrlController</a>
+    .
+    shortenUrl
+    </div><div class="methodInfo">
+    <table class="methodInfo">
+    <thead class="methodInfo">
+        <tr class="methodInfo">
+            <th class="methodInfo firstcolumn"></th>
+            <th class="methodInfo" colspan="3">Statement Coverage</th>
+            <th class="methodInfo" colspan="3">Branch Coverage</th>
+            <th class="methodInfo" colspan="3">Loop Coverage</th>
+            <th class="methodInfo" colspan="3">Strict Condition Coverage</th>
+        </tr>
+    </thead>
+    <tbody class="methodInfo">
+        <tr class="methodInfo">
+            <td class="methodInfo firstcolumn">
+                    @PostMapping(&quot;/api/shorten&quot;)
+    public ResponseEntity&lt;Map&lt;String, String&gt;&gt; shortenUrl(@Valid @RequestBody ShortenRequest request)
+            </td>  
+                                    <td class="methodInfo">
+                        3&nbsp;/&nbsp;4
+                </td>
+                <td class="methodInfo">
+                        75&nbsp;%
+                </td>
+                <td class="methodInfo coverage">
+                        <div class="red"><div class="green" style="width:75%"></div></div>
+                </td>   
+                                                <td class="methodInfo">
+                        1&nbsp;/&nbsp;2
+                </td>
+                <td class="methodInfo">
+                        50&nbsp;%
+                </td>
+                <td class="methodInfo coverage">
+                        <div class="red"><div class="green" style="width:50%"></div></div>
+                </td>   
+                                            <td class="methodInfo">
+                        0&nbsp;/&nbsp;0
+                </td>
+                <td class="methodInfo">
+                        ---
+                </td>
+                <td class="methodInfo coverage">
+                        <div class="grey"></div>
+                </td>  
+                                            <td class="methodInfo">
+                        0&nbsp;/&nbsp;0
+                </td>
+                <td class="methodInfo">
+                        ---
+                </td>
+                <td class="methodInfo coverage">
+                        <div class="grey"></div>
+                </td>  
+                        </tr>
+    </tbody>
+    </table></div>
+    <div class="code">
+    <table class="code">
+        <thead class="code">
+        <tr class="code">
+                        <th class="code" colspan="3">UrlController.java</th>
+                </tr>
+        </thead>
+        <tbody class="code">
+                      <tr class="code" id="L27">
+             <td class="code lineNumber">
+                  <a href="#L27">27</a>
+                       </td>
+              <td class="code executions">
+                       &nbsp;
+              </td>
+              <td class="code text">
+                  &nbsp;&nbsp;&nbsp; @PostMapping(&quot;/api/shorten&quot;)
+              </td>
+          </tr>
+                      <tr class="code" id="L28">
+             <td class="code lineNumber">
+                  <a href="#L28">28</a>
+                       </td>
+              <td class="code executions">
+                       &nbsp;
+              </td>
+              <td class="code text">
+                  &nbsp;&nbsp;&nbsp; public ResponseEntity&lt;Map&lt;String, String&gt;&gt; shortenUrl(@Valid @RequestBody ShortenRequest request) {
+              </td>
+          </tr>
+                      <tr class="code" id="L29">
+             <td class="code lineNumber">
+                  <a href="#L29">29</a>
+                       </td>
+              <td class="code executions">
+                       &nbsp;
+              </td>
+              <td class="code text">
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="covered fullyCovered Statement_Coverage">System.out.println(&quot;Received request to shorten URL: &quot; + request.getUrl());</span>
+              </td>
+          </tr>
+                      <tr class="code" id="L30">
+             <td class="code lineNumber">
+                  <a href="#L30">30</a>
+                       </td>
+              <td class="code executions">
+                       &nbsp;
+              </td>
+              <td class="code text">
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="covered partlyCovered Branch_Coverage" title="Unexecuted branches: catch (IllegalArgumentException e)">try</span> {
+              </td>
+          </tr>
+                      <tr class="code" id="L31">
+             <td class="code lineNumber">
+                  <a href="#L31">31</a>
+                       </td>
+              <td class="code executions">
+                       &nbsp;
+              </td>
+              <td class="code text">
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="covered fullyCovered Statement_Coverage">String shortCode = urlService.shortenUrl(request.getUrl());</span>
+              </td>
+          </tr>
+                      <tr class="code" id="L32">
+             <td class="code lineNumber">
+                  <a href="#L32">32</a>
+                       </td>
+              <td class="code executions">
+                       &nbsp;
+              </td>
+              <td class="code text">
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="covered fullyCovered Statement_Coverage">System.out.println(&quot;Successfully shortened &quot; + request.getUrl() + &quot; to &quot; + shortCode);</span>
+              </td>
+          </tr>
+                      <tr class="code" id="L33">
+             <td class="code lineNumber">
+                  <a href="#L33">33</a>
+                       </td>
+              <td class="code executions">
+                       &nbsp;
+              </td>
+              <td class="code text">
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return new ResponseEntity&lt;Map&lt;String, String&gt;&gt;(Collections.singletonMap(&quot;shortCode&quot;, shortCode), HttpStatus.OK);
+              </td>
+          </tr>
+                      <tr class="code" id="L34">
+             <td class="code lineNumber">
+                  <a href="#L34">34</a>
+                       </td>
+              <td class="code executions">
+                       &nbsp;
+              </td>
+              <td class="code text">
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } <span class="covered notCovered Branch_Coverage">catch (IllegalArgumentException e)</span> {
+              </td>
+          </tr>
+                      <tr class="code" id="L35">
+             <td class="code lineNumber">
+                  <a href="#L35">35</a>
+                       </td>
+              <td class="code executions">
+                       &nbsp;
+              </td>
+              <td class="code text">
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="covered notCovered Statement_Coverage">System.err.println(&quot;Error shortening URL &quot; + request.getUrl() + &quot;: &quot; + e.getMessage());</span>
+              </td>
+          </tr>
+                      <tr class="code" id="L36">
+             <td class="code lineNumber">
+                  <a href="#L36">36</a>
+                       </td>
+              <td class="code executions">
+                       &nbsp;
+              </td>
+              <td class="code text">
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return new ResponseEntity&lt;Map&lt;String, String&gt;&gt;(Collections.singletonMap(&quot;error&quot;, e.getMessage()), HttpStatus.BAD_REQUEST);
+              </td>
+          </tr>
+                      <tr class="code" id="L37">
+             <td class="code lineNumber">
+                  <a href="#L37">37</a>
+                       </td>
+              <td class="code executions">
+                       &nbsp;
+              </td>
+              <td class="code text">
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+              </td>
+          </tr>
+                      <tr class="code" id="L38">
+             <td class="code lineNumber">
+                  <a href="#L38">38</a>
+                       </td>
+              <td class="code executions">
+                       &nbsp;
+              </td>
+              <td class="code text">
+                  &nbsp;&nbsp;&nbsp; }
+              </td>
+          </tr>
+            </tbody>
+    </table></div>
+        <div class="creationNote">
+        created on July 14, 2025, 9:19:48 PM EDT with
+        <a href="http://www.codecover.org">
+            CodeCover
+        </a>
+    </div>    
+</body>
+</html>
+        

@@ -1,0 +1,47 @@
+// Charset: UTF-8
+// ///////////////////////////////
+// 
+// Start Session
+// 
+// 14.07.2025 21:17:07.901
+// 
+// ///////////////////////////////
+// 14.07.2025 21:17:07.901
+TEST_SESSION_CONTAINER "aa239ec1-ea68-4212-8cb5-67fbb16979de"
+START_TEST_CASE "UNNAMED TESTCASE" 1752542227901 "This is a test case containing all coverage results cause no startTestCase methods where captured."
+START_SECTION "com.example.urlshortener.service.UrlService.java"
+S1 4
+S2 4
+S3 4
+S8 4
+S9 3
+S10 3
+S11 2
+S12 2
+S13 2
+S14 3
+S25 2
+S26 2
+B3 1
+B4 3
+B5 1
+B6 2
+B7 3
+C2-10 1
+C2-11 3
+C3-10 2
+C3-11 1
+C4-10 3
+C7-10 2
+L1-1 2
+// 14.07.2025 21:17:07.933
+// 00:00.032
+END_TEST_CASE "UNNAMED TESTCASE" 1752542227933
+// ///////////////////////////////
+// 
+// End Session
+// 
+// 14.07.2025 21:17:07.934
+// 00:00.033
+// 
+// ///////////////////////////////

@@ -3,18 +3,11 @@ import com.example.urlshortener.controller.UrlController;
 import com.example.urlshortener.model.ShortenRequest;
 import com.example.urlshortener.model.UrlsResponse;
 import com.example.urlshortener.service.UrlService;
-import jakarta.validation.Valid;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
-import java.util.Collections;
 import java.util.Map;
-import java.util.Optional;
 
-public class urlControllerTester {
+public class UrlControllerTester {
     public static void main(String[] args) {
         UrlService urlService = new UrlService();
 
